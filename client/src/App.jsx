@@ -1,15 +1,13 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Button } from './components/ui/button'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-      <div className='bg-zinc-900 h-screen w-full text-white'>
-        <h1>Leaning management system project</h1>
+      <div className='bg-zinc-900 h-screen w-full '>
+        <h1 className='text-white'>Leaning management system project</h1>
+        <Button variant='outline'>Click me</Button>
       </div>
     </>
   )
