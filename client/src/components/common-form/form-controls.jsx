@@ -8,6 +8,7 @@ function FormControls({formControls = [], formData, setFormData}) {
 
     const renderComponentByType = (getControlItem) => {
         let element = null;
+        let value = formData[getControlItem.name] || ''
 
         switch (getControlItem.componentType) {
             case 'input':
@@ -16,11 +17,22 @@ function FormControls({formControls = [], formData, setFormData}) {
                         name = {getControlItem.name}
                         placeholder= {getControlItem.placeholder}
                         type= {getControlItem.type}
+                        value = {value}
+                        onChange = {(e) => setFormData({
+                            ...formData,
+                            [getControlItem.name]: event.target.value
+                        })}
                     />)
                 break;
         
             case 'select':
-                element = (<Select>
+                element = (<Select
+                value={value}
+                    onValueChange={(value) => setFormData({
+                        ...formData,
+                        [getControlItem.name]: value
+                    })}
+                >
                     <SelectTrigger className= 'w-full'>
                         <SelectValue placeholder={getControlItem.placeholder} />
                     </SelectTrigger>
@@ -42,6 +54,11 @@ function FormControls({formControls = [], formData, setFormData}) {
                         id={getControlItem.name}
                         name = {getControlItem.name}
                         placeholder= {getControlItem.placeholder}
+                        value = {value}
+                        onChange = {(e) => setFormData({
+                            ...formData,
+                            [getControlItem.name]: event.target.value
+                        })}
                     />)
                 break;
         
@@ -51,6 +68,11 @@ function FormControls({formControls = [], formData, setFormData}) {
                         name = {getControlItem.name}
                         placeholder= {getControlItem.placeholder}
                         type= {getControlItem.type}
+                        value = {value}
+                        onChange = {(e) => setFormData({
+                            ...formData,
+                            [getControlItem.name]: event.target.value
+                        })}
                     />)
                 break;
         }

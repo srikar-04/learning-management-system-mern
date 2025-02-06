@@ -7,12 +7,25 @@ import {
   TabsTrigger,
 } from "../../components/ui/tabs.jsx";
 import { GraduationCap } from "lucide-react";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.jsx";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card.jsx";
+import { AuthContext } from "@/context/auth-context/index.jsx";
 
 function AuthPage() {
   const [activeTab, setActiveTab] = useState("signin");
+  const {
+    signUpFormData,
+    setSignUpFormData,
+    signInFormData,
+    setSignInFormData
+  } = useContext(AuthContext);
 
   const handleTabChange = (value) => {
     setActiveTab(value);
@@ -33,27 +46,29 @@ function AuthPage() {
           onValueChange={handleTabChange}
           className="w-full max-w-md"
         >
-            {/* specifies list of tabs */}
+          {/* specifies list of tabs */}
           <TabsList className="min-w-full border grid grid-cols-2">
             <TabsTrigger value="signin">Sign In</TabsTrigger>
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
           </TabsList>
 
-            {/* specifies the content of a particular tab */}
+          {/* specifies the content of a particular tab */}
 
-            {/* THIS IS SIGNIN TAB */}
+          {/* THIS IS SIGNIN TAB */}
           <TabsContent value="signin">
-            <Card className='p-6 space-y-4'>
+            <Card className="p-6 space-y-4">
               <CardHeader>
                 <CardTitle>Sign In to your account</CardTitle>
                 <CardDescription>
                   Enter your email and password to acess your account
                 </CardDescription>
               </CardHeader>
-              <CardContent className='space-y-2 '>
-                <CommonForm 
-                  formControls={signInFormControls} 
-                  buttonText = 'Sign In'
+              <CardContent className="space-y-2 ">
+                <CommonForm
+                  formControls={signInFormControls}
+                  buttonText="Sign In"
+                  formData={signInFormData}
+                  setFormData={setSignInFormData}
                 />
               </CardContent>
             </Card>
@@ -61,19 +76,21 @@ function AuthPage() {
 
           {/* THIS IS SIGNUP TAB */}
           <TabsContent className="w-full " value="signup">
-            <Card className='p-6 space-y-4'>
-                <CardHeader>
-                  <CardTitle>Create a new account</CardTitle>
-                  <CardDescription>
-                    Enter your details to get started
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className='space-y-2 '>
-                  <CommonForm 
-                    formControls={signUpFormControls} 
-                    buttonText = 'Sign Up'
-                  />
-                </CardContent>
+            <Card className="p-6 space-y-4">
+              <CardHeader>
+                <CardTitle>Create a new account</CardTitle>
+                <CardDescription>
+                  Enter your details to get started
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2 ">
+                <CommonForm
+                  formControls={signUpFormControls}
+                  buttonText="Sign Up"
+                  formData={signUpFormData}
+                  setFormData={setSignUpFormData}
+                />
+              </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
