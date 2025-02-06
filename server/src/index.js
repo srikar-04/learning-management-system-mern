@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import express from 'express'
 import cors from 'cors'
-import { connectDB } from '../DB/index.js';
+import { connectDB } from './DB/index.js';
 
 dotenv.config()
 
@@ -16,9 +16,10 @@ app.use(cors({
 }))
 app.use(express.json());
 
+//routes configuration
+
 
 // DB Connection
-
 const PORT = process.env.PORT || 5000
 
 connectDB()
