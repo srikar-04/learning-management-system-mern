@@ -23,3 +23,20 @@ export const signUpFormControls = [
         componentType: 'input'
     },
 ]
+
+export const signInFormControls = [
+    {
+        name: 'email',
+        label: 'email',
+        placeholder: 'enter your email adress',
+        type: 'email',
+        componentType: 'input'
+    },
+    {
+        name: 'password',
+        label: 'password',
+        placeholder: 'enter your password',
+        type: 'password',
+        componentType: 'input'
+    },
+]

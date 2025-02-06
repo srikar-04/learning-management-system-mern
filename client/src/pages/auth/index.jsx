@@ -1,4 +1,4 @@
-import { signUpFormControls } from "@/config/index.js";
+import { signInFormControls, signUpFormControls } from "@/config/index.js";
 import CommonForm from "../../components/common-form/index.jsx";
 import {
   Tabs,
@@ -9,6 +9,7 @@ import {
 import { GraduationCap } from "lucide-react";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.jsx";
 
 function AuthPage() {
   const [activeTab, setActiveTab] = useState("signin");
@@ -39,9 +40,41 @@ function AuthPage() {
           </TabsList>
 
             {/* specifies the content of a particular tab */}
-          <TabsContent value="signin">signin</TabsContent>
+
+            {/* THIS IS SIGNIN TAB */}
+          <TabsContent value="signin">
+            <Card className='p-6 space-y-4'>
+              <CardHeader>
+                <CardTitle>Sign In to your account</CardTitle>
+                <CardDescription>
+                  Enter your email and password to acess your account
+                </CardDescription>
+              </CardHeader>
+              <CardContent className='space-y-2 '>
+                <CommonForm 
+                  formControls={signInFormControls} 
+                  buttonText = 'Sign In'
+                />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* THIS IS SIGNUP TAB */}
           <TabsContent className="w-full " value="signup">
-            <CommonForm formControls={signUpFormControls} />
+            <Card className='p-6 space-y-4'>
+                <CardHeader>
+                  <CardTitle>Create a new account</CardTitle>
+                  <CardDescription>
+                    Enter your details to get started
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className='space-y-2 '>
+                  <CommonForm 
+                    formControls={signUpFormControls} 
+                    buttonText = 'Sign Up'
+                  />
+                </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
