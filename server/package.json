@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "server for LMS handling cloudinary, payment gateway, prettier and all other basic backend packages",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon index.js"
