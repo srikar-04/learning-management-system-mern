@@ -54,6 +54,7 @@ function FormControls({formControls = [], formData, setFormData}) {
                     />)
                 break;
         }
+        return element
     }
 
   return (
