@@ -31,6 +31,14 @@ function AuthPage() {
     setActiveTab(value);
   };
 
+  const validSignInForm = () => {
+    return signInFormData && signInFormData.userEmail !== '' && signInFormData.password !== ''
+  }
+
+  const validSignUpForm = () => {
+    return signUpFormData && signUpFormData.userEmail !== '' && signUpFormData.password !== '' && signUpFormData.userName !== ''
+  }
+
   return (
     <div className="flex flex-col h-screen w-full">
       <header className="px-4 lg:px-6 h-14 flex items-center border-b">
@@ -69,6 +77,7 @@ function AuthPage() {
                   buttonText="Sign In"
                   formData={signInFormData}
                   setFormData={setSignInFormData}
+                  isButtonDisabled = {!validSignInForm()}
                 />
               </CardContent>
             </Card>
@@ -89,6 +98,7 @@ function AuthPage() {
                   buttonText="Sign Up"
                   formData={signUpFormData}
                   setFormData={setSignUpFormData}
+                  isButtonDisabled = {!validSignUpForm()}
                 />
               </CardContent>
             </Card>
