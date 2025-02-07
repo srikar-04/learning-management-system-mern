@@ -47,7 +47,43 @@ const registerUser = asyncHandler( async (req, res) => {
     })
 })
 
+const loginUser = asyncHandler( async (req, res) => {
+    const { userEmail, password } = req.body;
+
+    const userExsist = await User.findOne({
+        $or: [{userEmail}, {password}]
+    })
+
+    if(!userExsist) {
+        return res.status(403).json({
+            error: 'user doesnot exsists'
+        })
+    }
+
+    const isPasswordCorrect = await userExsist.isPasswordCorrect(password);
+
+    if(!isPasswordCorrect) {
+        return res.status(403).json({
+            error: 'incorrect password'
+        })
+    }
+
+    const acessToken = await userExsist.generateAcessToken();
+    
+    if(!acessToken) {
+        return res.status(500).json({
+            error: 'cannot generate acess token'
+        })
+    }
+
+    return res.status(201).json({
+        msg: 'login sucesfull',
+        userExsist,
+        acessToken
+    })
+})
 
 export {
-    registerUser
+    registerUser,
+    loginUser
 }
