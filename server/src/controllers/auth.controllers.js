@@ -42,7 +42,7 @@ const registerUser = asyncHandler( async (req, res) => {
 
     return res.status(201).json({
         success: true,
-        msg: 'user registered sucesfully',
+        msg: 'user registered successfully',
         newUser
     })
 })
@@ -77,8 +77,9 @@ const loginUser = asyncHandler( async (req, res) => {
     }
 
     return res.status(201).json({
-        msg: 'login sucesfull',
-        userExsist,
+        msg: 'login successfull',
+        success: true,
+        user: userExsist,
         acessToken
     })
 })

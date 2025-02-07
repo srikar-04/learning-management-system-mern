@@ -3,7 +3,14 @@ import axiosInstance from "../api/axiosInstance.js";
 export async function loginServices(formData) {
     console.log('control is reaching loginServices');
     
-    const { data } = await axiosInstance.post('/auth/login', formData)
+    let data
+    try {
+        data  = await axiosInstance.post('/auth/login', formData)
+    } catch (error) {
+        if(!error.response.data.success) {
+            window.alert(error.response.data.error)
+        }
+    }
 
     return data;
 }
