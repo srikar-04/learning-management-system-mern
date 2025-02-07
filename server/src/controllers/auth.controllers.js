@@ -56,7 +56,7 @@ const loginUser = asyncHandler( async (req, res) => {
 
     if(!userExsist) {
         return res.status(403).json({
-            error: 'user doesnot exsists'
+            error: 'user doesnot exsists, create new account'
         })
     }
 

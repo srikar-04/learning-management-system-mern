@@ -50,12 +50,12 @@ true
 
        if(!data) {
         console.log('unable to register user');
-        }
+        } 
 
        if(data?.data.success) {
         window.alert(data.data.msg)
        }
-       setSignUpFormData({})
+       setSignUpFormData(initialSignUpFormData)
     }
 
     const handleLoginUser = async (e) => {
@@ -69,7 +69,7 @@ true
             console.log('unable to login user');
         }
         // console.log(data.data.acessToken, 'acessToken details');
-        if(data.data.success) {
+        if(data?.data.success) {
             sessionStorage.setItem('acessToken', JSON.stringify(data.data.acessToken))
             setAuth({
                 authenticate: true,
@@ -77,7 +77,7 @@ true
             })
             window.alert(data.data.msg)
         }
-        setSignInFormData({})
+        setSignInFormData(initialSignInFormData)
     }
 
     return (
