@@ -24,7 +24,8 @@ function AuthPage() {
     signUpFormData,
     setSignUpFormData,
     signInFormData,
-    setSignInFormData
+    setSignInFormData,
+    handleRegisterUser
   } = useContext(AuthContext);
 
   const handleTabChange = (value) => {
@@ -42,7 +43,7 @@ function AuthPage() {
   return (
     <div className="flex flex-col h-screen w-full">
       <header className="px-4 lg:px-6 h-14 flex items-center border-b">
-        <Link className="flex items-center justify-center">
+        <Link to={'/'} className="flex items-center justify-center">
           <GraduationCap className="h-8 w-8 mr-4" />
           <span className="font-extrabold text-xl">LMS Learn</span>
         </Link>
@@ -99,6 +100,7 @@ function AuthPage() {
                   formData={signUpFormData}
                   setFormData={setSignUpFormData}
                   isButtonDisabled = {!validSignUpForm()}
+                  handleSubmit={(e) => handleRegisterUser(e)}
                 />
               </CardContent>
             </Card>

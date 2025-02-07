@@ -9,12 +9,13 @@ dotenv.config()
 const app = express();
 
 // MIDDLEWARES
-app.use(cors({
-    origin: process.env.CORS_ORIGIN,
-    credentials: true,
-    methods: ['GET', 'POST', 'DELETE', 'PUT'],
-    allowedHeaders: ["Content-Type", "Authorization"]
-}))
+// app.use(cors({
+//     origin: process.env.CORS_ORIGIN,
+//     credentials: true,
+//     methods: ['GET', 'POST', 'DELETE', 'PUT'],
+//     allowedHeaders: ["Content-Type", "Authorization"]
+// }))
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({extended: true, limit: "16kb"})) // for accepting form data
 app.use(express.static("public")) // for storing static files like images
