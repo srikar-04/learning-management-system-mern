@@ -1,5 +1,6 @@
 import axiosInstance from "../../api/axiosInstance.js";
 import { initialSignInFormData, initialSignUpFormData } from "@/config";
+import { loginServices } from "@/services/services.js";
 import { useState } from "react";
 import { createContext } from "react";
 
@@ -12,7 +13,7 @@ export default function AuthProvider({children}) {
     const [signUpFormData, setSignUpFormData] = useState(initialSignUpFormData)
 
     const handleRegisterUser = async (e) => {
-        console.log('control is reaching state');
+        console.log('control is reaching handleRegisterUser');
 
         e.preventDefault()
         
@@ -28,13 +29,26 @@ export default function AuthProvider({children}) {
         console.log(data, 'data fetched at frontend using axios');
     }
 
+    const handleLoginUser = async (e) => {
+        console.log('control is reaching handleLoginUser in state');
+        
+        e.preventDefault()
+
+        const data = loginServices(signInFormData)
+
+        if(!data) {
+            console.log('unable to login user');
+        }
+    }
+
     return (
         <AuthContext.Provider value={{
             signUpFormData,
             setSignUpFormData,
             signInFormData,
             setSignInFormData,
-            handleRegisterUser
+            handleRegisterUser,
+            handleLoginUser
         }}>
             {/* this children is "app" */}
             {children} 

@@ -8,7 +8,7 @@ const router = Router();
 router.route('/register').post(registerUser)
 router.route('/login').post(loginUser)
 
-router.route('/check-auth').post(authMiddleware, (req, res) => {
+router.route('/check-auth').get(authMiddleware, (req, res) => {
     const user = req.user;
 
     res.status(200).json({
