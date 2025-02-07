@@ -1,7 +1,7 @@
 import axiosInstance from "../../api/axiosInstance.js";
-import { initialSignInFormData, initialSignUpFormData } from "@/config";
-import { loginServices } from "@/services/services.js";
-import { useState } from "react";
+import { initialSignInFormData, initialSignUpFormData } from "../../config/index.js";
+import { checkAuthService, loginServices } from "@/services/services.js";
+import { useEffect, useState } from "react";
 import { createContext } from "react";
 
 // AuthContext, which is created using createContext, acts as a global variable from which all components can acess the data without passing props to each and every component
@@ -16,19 +16,8 @@ export default function AuthProvider({children}) {
         user: null
     })
 
-    /* 
-        data
-: 
-msg
-: 
-"user registered sucesfully"
-newUser
-: 
-{userName: 'shobha', password: '$2a$10$aNr26AUE3vHu8bTWKLthwuW5fJI8M9LxLqYhbSfvvitMgAt2jeGs.', userEmail: 'shobhapurijala1212@gmail.com', role: 'user', _id: '67a605795288eefcb8074b09', …}
-success
-: 
-true
-    */
+    console.log(auth, 'auth info');
+    
 
     const handleRegisterUser = async (e) => {
         // console.log('control is reaching handleRegisterUser');
@@ -76,9 +65,37 @@ true
                 user: data.data.user
             })
             window.alert(data.data.msg)
-        }
+        }  else {
+            setAuth({
+                authenticate: false,
+                user: null
+            })
+        } 
+        console.log(auth);
+        
         setSignInFormData(initialSignInFormData)
     }
+
+    const checkAuthUser = async () => {
+        const data = await checkAuthService()
+
+        if(data.success) {
+            setAuth({
+                authenticate: true,
+                user: data.data.user
+            })
+        } else {
+            setAuth({
+                authenticate: false,
+                user: null
+            })
+        }
+    }
+
+   // check auth user
+    useEffect( () => {
+        checkAuthUser()
+    }, [])
 
     return (
         <AuthContext.Provider value={{

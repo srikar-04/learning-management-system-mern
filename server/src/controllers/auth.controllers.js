@@ -69,6 +69,8 @@ const loginUser = asyncHandler( async (req, res) => {
     }
 
     const acessToken = await userExsist.generateAcessToken();
+    // console.log(acessToken, 'acess token in signin controller');
+    
     
     if(!acessToken) {
         return res.status(500).json({

@@ -7,15 +7,15 @@ export async function loginServices(formData) {
     try {
         data  = await axiosInstance.post('/auth/login', formData)
     } catch (error) {
-        if(!error.response.data.success) {
-            window.alert(error.response.data.error)
+        if(!error.response?.data.success) {
+            window.alert(error.response?.data.error)
         }
     }
 
     return data;
 }
 
-export async function checkAuth() {
+export async function checkAuthService() {
     const { data } = await axiosInstance.get('auth/check-auth')
 
     return data

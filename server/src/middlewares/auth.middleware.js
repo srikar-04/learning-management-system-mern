@@ -1,12 +1,16 @@
 import jwt from 'jsonwebtoken';
 
 
-const verifyToken = (token, jwtSecret) => {
-    return jwt.verify(token, jwtSecret)
+const verifyToken =  (token, jwtSecret) => {
+    let res =  jwt.verify(token, jwtSecret);
+
+    // console.log(res, 'response in verify token');
+    
+    return res
 }
 
 // THIS IS AUTH MIDDLEWARE USING "AUTHORIZATION HEADERS"
-const authMiddleware = (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
 
     // if the user is signed in then he gets the acessToken which is stored in session storage
     // if the acess token is present(means user is signed in) then authorization header is passed from axiosInstance
@@ -17,6 +21,8 @@ const authMiddleware = (req, res, next) => {
     // signIn from form -->> storing data in Db and returning acessToken(in session storage) -->> token sent to authorization headers -->> auth middleware using authorization header to check login status of user and appending req.user
 
     const authHeader = req.headers.authorization
+    // console.log(authHeader, 'auth header');
+    
 
     if(!authHeader) {
         return res.status(401).json({
@@ -26,8 +32,15 @@ const authMiddleware = (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
-
+    // console.log(token, 'token after split');
+    
+    // console.log(process.env.JWT_SECRET, 'this is secret');
+    // console.log(typeof(process.env.JWT_SECRET), 'this is type of secret');
+    
     const payload = verifyToken(token, process.env.JWT_SECRET)
+
+    console.log(payload, 'payload after token verification');
+    
 
     req.user = payload
 

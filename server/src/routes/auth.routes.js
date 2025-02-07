@@ -10,10 +10,12 @@ router.route('/login').post(loginUser)
 
 router.route('/check-auth').get(authMiddleware, (req, res) => {
     const user = req.user;
+    // console.log(user, 'user in routes which is getting returned');
+    
 
     res.status(200).json({
         success: true,
-        msg: 'authenticated user',
+        msg: 'user authenticated',
         data: {
             user
         }
