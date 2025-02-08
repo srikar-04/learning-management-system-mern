@@ -7,7 +7,7 @@ export async function loginServices(formData) {
     try {
         data  = await axiosInstance.post('/auth/login', formData)
     } catch (error) {
-        if(!error.response?.data.success) {
+        if(error.response && !error.response.data.success) {
             window.alert(error.response?.data.error)
         }
     }
@@ -25,6 +25,10 @@ export async function checkAuthService() {
     } catch (error) {
         console.log('error in check auth services', error);
         // throw new Error('error in auth services')
-        return error.response.data
+        if(error != 'TokenExpiredError') {
+            return error.response?.data
+        }
+        sessionStorage.clear()
+        // return error.response?.data
     }
 }

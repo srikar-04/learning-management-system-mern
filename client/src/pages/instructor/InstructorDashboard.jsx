@@ -48,6 +48,12 @@ function InstructorDashboard() {
             {
               menuItems.map( item => (
               <Button
+                // variant = {activeTab === item.value ? '' : 'ghost'}
+                variant = {
+                  item.value === 'logout' 
+                  ? 'destructive'
+                  : (activeTab === item.value ? '' : 'secondary')
+                }
                 className='w-full justify-start mb-2' 
                 key={item.value}
                 onClick = {item.value === 'logout'

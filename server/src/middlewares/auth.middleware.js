@@ -2,8 +2,17 @@ import jwt from 'jsonwebtoken';
 
 
 const verifyToken =  (token, jwtSecret) => {
-    let res =  jwt.verify(token, jwtSecret);
-
+    let res
+    try {
+        res =  jwt.verify(token, jwtSecret);
+    } catch (error) {
+        if(error.name === 'TokenExpiredError') {
+            // sessionStorage.clear()
+            throw new Error('TokenExpiredError')
+        }
+        // console.log(error, 'error in auth middleware');
+        // throw new Error(error)
+    }
     // console.log(res, 'response in verify token');
     
     return res
