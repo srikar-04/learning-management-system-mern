@@ -1,3 +1,4 @@
+import { Skeleton } from "@/components/ui/skeleton.jsx";
 import axiosInstance from "../../api/axiosInstance.js";
 import { initialSignInFormData, initialSignUpFormData } from "../../config/index.js";
 import { checkAuthService, loginServices } from "@/services/services.js";
@@ -15,6 +16,7 @@ export default function AuthProvider({children}) {
         authenticate: false,
         user: null
     })
+    const [loading, setLoading] = useState(true)
 
     // console.log(auth, 'auth info');
     
@@ -86,12 +88,14 @@ export default function AuthProvider({children}) {
                 authenticate: true,
                 user: data.data.user
             })
+            setLoading(false)
         } else {
             
             setAuth({
                 authenticate: false,
                 user: null
             })
+            setLoading(false)
         }
     }
 
@@ -111,7 +115,9 @@ export default function AuthProvider({children}) {
             auth
         }}>
             {/* this children is "app" */}
-            {children} 
+            {
+                loading ? <Skeleton /> : children 
+            }
         </AuthContext.Provider>
     )
 }
