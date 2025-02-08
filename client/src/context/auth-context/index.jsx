@@ -55,7 +55,8 @@ export default function AuthProvider({children}) {
         e.preventDefault()
 
         const data = await loginServices(signInFormData)
-        
+        // console.log(data, 'data received in second trip');
+              
         if(!data) {
             console.log('unable to login user');
         }
@@ -68,13 +69,14 @@ export default function AuthProvider({children}) {
             })
             // window.alert(data.data.msg)
         }  else {
+            
             setAuth({
                 authenticate: false,
                 user: null
             })
-            if(data?.data.msg) {
-                window.alert(data.data.msg)
-            }
+            // if(data?.data.msg) {
+            //     window.alert(data.data.msg)
+            // }
         } 
         console.log(auth);
         
@@ -82,8 +84,10 @@ export default function AuthProvider({children}) {
     }
 
     const checkAuthUser = async () => {
+        // console.log('inside checkAuthUser in state');
+        
         const data = await checkAuthService()
-        console.log(data, 'data inside check auth user');
+        // console.log(data, 'data inside check auth user in second trip');
         
 
         if(data?.success) {
@@ -104,6 +108,8 @@ export default function AuthProvider({children}) {
 
    // check auth user
     useEffect( () => {
+        // console.log('inside useEffect');
+        
         checkAuthUser()
     }, [])
 

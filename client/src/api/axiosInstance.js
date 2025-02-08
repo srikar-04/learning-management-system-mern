@@ -2,7 +2,7 @@ import axios from "axios";
 
 const axiosInstance = axios.create({
     baseURL: 'http://localhost:3000',
-    timeout: 5000, 
+    timeout: 4000, 
 })
 
 /* 
@@ -23,13 +23,15 @@ const axiosInstance = axios.create({
 
 */
 axiosInstance.interceptors.request.use(config => {
+    
     const acessToken = JSON.parse(sessionStorage.getItem('acessToken')) || ""
-
+    
+    // console.log(acessToken, 'acess Token in axiosInstance');
     if(acessToken) {
         config.headers.Authorization = `Bearer ${acessToken}`
     }
 
     return config
-}, (err) => Promise.reject(err))
+})
 
 export default axiosInstance

@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken';
 
 const verifyToken =  (token, jwtSecret) => {
     let res
+    // console.log('response in verify token');
+    
     try {
         res =  jwt.verify(token, jwtSecret);
     } catch (error) {
@@ -13,7 +15,7 @@ const verifyToken =  (token, jwtSecret) => {
         // console.log(error, 'error in auth middleware');
         // throw new Error(error)
     }
-    // console.log(res, 'response in verify token');
+    console.log(res, 'response in verify token');
     
     return res
 }
@@ -31,6 +33,8 @@ const authMiddleware = async (req, res, next) => {
 
     const authHeader = req.headers.authorization
     // console.log(authHeader, 'auth header');
+    // console.log('control in auth middleware');
+    
     
 
     if(!authHeader) {

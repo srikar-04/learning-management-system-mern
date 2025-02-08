@@ -2,11 +2,11 @@ import { User } from '../models/user.models.js'
 import { asyncHandler } from '../utils/asyncHandler.js'
 
 const registerUser = asyncHandler( async (req, res) => {
-    console.log('control is reching register user in controller');
+    // console.log('control is reching register user in controller');
     
     const {userName, userEmail, password, role} = req.body
 
-    console.log(userName, 'username from formdata given by user');
+    // console.log(userName, 'username from formdata given by user');
     
 
     const exsistingUser = await User.findOne({
@@ -49,6 +49,8 @@ const registerUser = asyncHandler( async (req, res) => {
 
 const loginUser = asyncHandler( async (req, res) => {
     const { userEmail, password } = req.body;
+    // console.log('control in login user in controller');
+    
 
     const userExsist = await User.findOne({
         $or: [{userEmail}, {password}]
@@ -56,6 +58,7 @@ const loginUser = asyncHandler( async (req, res) => {
 
     if(!userExsist) {
         return res.status(403).json({
+            success: false,
             error: 'user doesnot exsists, create new account'
         })
     }
@@ -64,16 +67,18 @@ const loginUser = asyncHandler( async (req, res) => {
 
     if(!isPasswordCorrect) {
         return res.status(403).json({
+            success: false,
             error: 'incorrect password'
         })
     }
 
     const acessToken = await userExsist.generateAcessToken();
-    // console.log(acessToken, 'acess token in signin controller');
+    console.log(acessToken, 'acess token in signin controller');
     
     
     if(!acessToken) {
         return res.status(500).json({
+            success: false,
             error: 'cannot generate acess token'
         })
     }

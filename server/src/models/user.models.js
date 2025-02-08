@@ -21,6 +21,7 @@ userSchema.methods.isPasswordCorrect = async function(password) {
 }
 
 userSchema.methods.generateAcessToken = async function() {
+    const expirationTime = Math.floor(Date.now() / 1000) + (2 * 24 * 60 * 60);
     return jwt.sign({
         _id: this._id,
         userEmail: this.userEmail,
@@ -29,7 +30,8 @@ userSchema.methods.generateAcessToken = async function() {
     },
     process.env.JWT_SECRET, 
     {
-        expiresIn: process.env.JWT_EXPIRY
+        // expiresIn: process.env.JWT_EXPIRY
+        expiresIn: expirationTime
     }
     )
 }
