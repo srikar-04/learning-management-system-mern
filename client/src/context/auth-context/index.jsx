@@ -16,7 +16,7 @@ export default function AuthProvider({children}) {
         user: null
     })
 
-    console.log(auth, 'auth info');
+    // console.log(auth, 'auth info');
     
 
     const handleRegisterUser = async (e) => {
@@ -78,13 +78,16 @@ export default function AuthProvider({children}) {
 
     const checkAuthUser = async () => {
         const data = await checkAuthService()
+        console.log(data, 'data inside check auth user');
+        
 
-        if(data.success) {
+        if(data?.success) {
             setAuth({
                 authenticate: true,
                 user: data.data.user
             })
         } else {
+            
             setAuth({
                 authenticate: false,
                 user: null
@@ -104,7 +107,8 @@ export default function AuthProvider({children}) {
             signInFormData,
             setSignInFormData,
             handleRegisterUser,
-            handleLoginUser
+            handleLoginUser,
+            auth
         }}>
             {/* this children is "app" */}
             {children} 

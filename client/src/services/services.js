@@ -16,7 +16,15 @@ export async function loginServices(formData) {
 }
 
 export async function checkAuthService() {
-    const { data } = await axiosInstance.get('auth/check-auth')
-
-    return data
+    console.log('control is inside auth services');
+    
+    try {
+        const { data } = await axiosInstance.get('auth/check-auth')
+        console.log(data, 'data fetched in check auth services');
+        return data
+    } catch (error) {
+        console.log('error in check auth services', error);
+        // throw new Error('error in auth services')
+        return error.response.data
+    }
 }
