@@ -2,10 +2,13 @@ import { Button } from '@/components/ui/button'
 import InstructorCourses from '../../components/instructor-view/InstructorCourses.jsx'
 import InstructorViewDashboard from '../../components/instructor-view/InstructorViewDashboard.jsx'
 import { BarChart, Book, LogOut } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Tabs, TabsContent } from '@radix-ui/react-tabs'
+import { AuthContext } from '../../context/auth-context/index.jsx'
 
 function InstructorDashboard() {
+
+  const { resetCredentials } = useContext(AuthContext)
 
   const menuItems = [
     {
@@ -28,8 +31,9 @@ function InstructorDashboard() {
     }
   ]
 
-  const handleLogout = async () => {
-    
+  const handleLogout = () => {
+    resetCredentials()
+    sessionStorage.clear()
   }
 
   const [activeTab, setActiveTab] = useState('dashboard')

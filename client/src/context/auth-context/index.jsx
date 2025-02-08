@@ -66,12 +66,15 @@ export default function AuthProvider({children}) {
                 authenticate: true,
                 user: data.data.user
             })
-            window.alert(data.data.msg)
+            // window.alert(data.data.msg)
         }  else {
             setAuth({
                 authenticate: false,
                 user: null
             })
+            if(data?.data.msg) {
+                window.alert(data.data.msg)
+            }
         } 
         console.log(auth);
         
@@ -104,6 +107,15 @@ export default function AuthProvider({children}) {
         checkAuthUser()
     }, [])
 
+    const resetCredentials = () => {
+        setAuth( () => (
+            {
+                authenticate: false,
+                user: null
+            }
+        ))
+    }
+
     return (
         <AuthContext.Provider value={{
             signUpFormData,
@@ -112,7 +124,8 @@ export default function AuthProvider({children}) {
             setSignInFormData,
             handleRegisterUser,
             handleLoginUser,
-            auth
+            auth,
+            resetCredentials
         }}>
             {/* this children is "app" */}
             {
