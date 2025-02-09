@@ -1,13 +1,12 @@
 import React from 'react'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input';
-import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent, SelectGroup } from '../ui/select';
-// import { SelectContent, SelectGroup } from '@radix-ui/react-select';
+import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from '../ui/select';
 import { Textarea } from '../ui/textarea';
 
 function FormControls({formControls = [], formData, setFormData}) {
 
-    console.log(formControls, 'formcontrols\n', formData, 'formData\n', setFormData, 'setFormData\n');
+    // console.log(formControls, 'formcontrols\n', formData, 'formData\n', setFormData, 'setFormData\n');
     
     const renderComponentByType = (getControlItem) => {
         let element = null;
