@@ -1,10 +1,12 @@
 import dotenv from 'dotenv';
+dotenv.config()
 import express from 'express'
 import cors from 'cors'
 import { connectDB } from './DB/index.js';
 import authRoutes from './routes/auth.routes.js'
+import mediaRoutes from './routes/media.routes.js'
 
-dotenv.config()
+
 
 const app = express();
 
@@ -29,6 +31,7 @@ app.use(express.static("public")) // for storing static files like images
 
 //routes configuration
 app.use('/auth', authRoutes)
+app.use('/media', mediaRoutes)
 
 // DB Connection
 const PORT = process.env.PORT || 5000

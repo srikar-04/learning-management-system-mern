@@ -1,6 +1,6 @@
 import express from 'express'
 import multer from 'multer'
-import { uploadMediaToCloudinary, deleteMediaFromCloudinary } from '../utils/cloudinary'
+import { uploadMediaToCloudinary, deleteMediaFromCloudinary } from '../utils/cloudinary.js'
 import {Router} from 'express'
 
 const router = Router();
@@ -15,7 +15,7 @@ router.post('/upload', upload.single('file'), async(req, res) => {
             data: result
         })
     } catch (error) {
-        console.log('error while uploading, in media.routes file');
+        console.log('error while uploading, in media.routes file', error);
         res.status(500).json({
             success: false,
             msg: 'Error uploading file'
@@ -49,4 +49,4 @@ router.delete('/delte/:id',async(req, res) => {
     }
 })
 
-export {router}
+export default router
