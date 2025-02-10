@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button.jsx'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch.jsx'
 import { Label } from '@/components/ui/label.jsx'
+import { courseCurriculumInitialFormData } from '@/config/index.js'
 
 function Curriculum() {
 
@@ -15,13 +16,24 @@ function Curriculum() {
 
   } = useContext(InstructorContext)
 
+  // console.log(courseCurriculumFormData);
+  
+  const handleNewLecture = () => {
+    setCourseCurriculumFormData([
+      ...courseCurriculumFormData,
+      {
+        ...courseCurriculumInitialFormData[0]
+      }
+    ])
+  }
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>Create Course Curriculum</CardTitle>
       </CardHeader>
       <CardContent>
-        <Button>Add Lecture</Button>
+        <Button onClick={handleNewLecture} >Add Lecture</Button>
         <div className='mt-4 space-y-4'>
           {
             courseCurriculumFormData.map(  (curriculumItem, index) => (
