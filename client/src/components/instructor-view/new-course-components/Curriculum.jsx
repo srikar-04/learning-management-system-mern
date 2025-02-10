@@ -66,6 +66,17 @@ function Curriculum() {
       const response = await mediaUploadService(videoFormData)
       console.log(response);
 
+      if(response.success) {
+        let copyCourseCurriculumFormData = [...courseCurriculumFormData]
+        copyCourseCurriculumFormData[index] = {
+          ...copyCourseCurriculumFormData[index],
+          videoUrl: response?.data.url,
+          public_id: response?.data.public_id
+        } 
+        setCourseCurriculumFormData(copyCourseCurriculumFormData)
+        setMediaUploadProgress(false)
+      }
+
     } catch (error) {
       console.log('error in handle upload method, in curriculum file', error);
     }
