@@ -1,12 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { InstructorContext } from '../../../context/instructor-context/instructorContext.jsx'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { Button } from '@/components/ui/button.jsx'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch.jsx'
 import { Label } from '@/components/ui/label.jsx'
 import { courseCurriculumInitialFormData } from '@/config/index.js'
 import { mediaUploadService } from '../../../services/services.js'
+import { MultiStepLoader } from '@/components/ui/multi-step-loader.jsx'
 
 function Curriculum() {
 
@@ -16,6 +17,20 @@ function Curriculum() {
     mediaUploadProgress,
     setMediaUploadProgress
   } = useContext(InstructorContext)
+
+  const [loading, setLoading] = useState(false)
+
+  const loadingStates = [
+    {
+      text: "uploading file",
+    },
+    {
+      text: "fetching details",
+    },
+    {
+      text: "rendering file data",
+    },
+  ];
 
   // console.log(courseCurriculumFormData);
   
@@ -61,7 +76,7 @@ function Curriculum() {
 
     try {
       
-      setMediaUploadProgress(true);
+      setLoading(true);
 
       const response = await mediaUploadService(videoFormData)
       console.log(response);
@@ -74,7 +89,7 @@ function Curriculum() {
           public_id: response?.data.public_id
         } 
         setCourseCurriculumFormData(copyCourseCurriculumFormData)
-        setMediaUploadProgress(false)
+        setLoading(false)
       }
 
     } catch (error) {
@@ -90,6 +105,13 @@ function Curriculum() {
       </CardHeader>
       <CardContent>
         <Button onClick={handleNewLecture} >Add Lecture</Button>
+        { loading 
+        ? <MultiStepLoader
+            loadingStates={loadingStates}
+            loading={loading}
+            duration={2000}
+          /> 
+        : null}
         <div className='mt-4 space-y-4'>
           {
             courseCurriculumFormData.map(  (curriculumItem, index) => (
