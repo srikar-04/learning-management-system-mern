@@ -22,28 +22,36 @@ function VideoPlayer({width = '100%', height='100%', url}) {
         setPlaying(prev => !prev)
     }
 
-    const handleProgress = () => {
-
+    const handleProgress = (state) => {
+        if(!seeking) {
+            setPlayed(state.played)
+        }
     }
 
     const handleRewind = () => {
-
+        playerRef.current?.seekTo(playerRef?.current.getCurrentTime() - 5)
     }
 
     const handleForward = () => {
-
+        playerRef.current?.seekTo(playerRef?.current.getCurrentTime() + 5)
     }
 
     const handleToggleMute = () => {
-
+        setMuted(prev => !prev)
     }
 
-    const handleSeekChange = () => {
-
+    const handleSeekChange = (newValue) => {
+        setPlayed(newValue[0])
+        setSeeking(true)
     }
 
     const handleSeekMouseUp = () => {
-        
+        setSeeking(false)
+        playerRef.current?.seekTo(played)
+    }
+
+    const handleVolumeChange = (newValue) => {
+        setVolume(newValue[0])
     }
 
   return (
@@ -122,6 +130,12 @@ function VideoPlayer({width = '100%', height='100%', url}) {
                                 :  <Volume2 className='h-6 w-6'/>
                             }
                         </Button>
+                        <Slider 
+                            value = {[volume * 100]}
+                            max={100}
+                            step={1}
+                            onValueChange={value => handleVolumeChange([value[0]/100])}
+                        />
                     </div>
                 </div>
             </div> )
