@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import ReactPlayer from 'react-player'
 import { Slider } from '../ui/slider';
 import { Button } from '../ui/button';
-import { Pause, Play, RotateCcw, RotateCw, Volume2, VolumeX } from 'lucide-react';
+import { Maximize, Minimize, Pause, Play, RotateCcw, RotateCw, Volume2, VolumeX } from 'lucide-react';
 
 function VideoPlayer({width = '100%', height='100%', url}) {
 
@@ -54,6 +54,43 @@ function VideoPlayer({width = '100%', height='100%', url}) {
         setVolume(newValue[0])
     }
 
+    const pad = (string) => {
+        return ('0' + string).slice(-2)
+    }
+
+    const formatTime = (seconds) => {
+        const date = new Date(seconds*1000)
+        const hh = date.getUTCHours();
+        const mm = date.getUTCMinutes();
+        const ss = date.getUTCSeconds();
+
+        if(hh) {
+            return `${hh}:${pad(mm)}:${ss}`
+        }
+        return `${mm}:${ss}`
+    }
+
+    const handleFullScreen = useCallback(() => {
+        if (!fullScreen) {
+            if (playerContainerRef?.current?.requestFullscreen) {
+                setFullScreen(true)
+                playerContainerRef.current.requestFullscreen();
+            }
+        } else {
+            if (document.exitFullscreen) {
+                setFullScreen(false)
+                document.exitFullscreen();
+            }
+        }
+    }, [fullScreen]);
+
+    const handleMouseMove = () => {
+        setShowControls(true);
+        clearTimeout(controlsTimeoutRef.current)
+        controlsTimeoutRef.current = setTimeout( () => setShowControls(false), 2500)
+    }
+
+
   return (
     <div 
         ref={playerContainerRef}
@@ -61,6 +98,9 @@ function VideoPlayer({width = '100%', height='100%', url}) {
         ${fullScreen ? 'w-screen h-screen' : '' }`}
 
         style={{width, height}}
+
+        onMouseMove={handleMouseMove}
+        onMouseLeave={() => setShowControls(false)}
     >
         <ReactPlayer 
             ref={playerRef}
@@ -91,7 +131,7 @@ function VideoPlayer({width = '100%', height='100%', url}) {
                             variant='ghost' 
                             size='icon' 
                             onClick={handlePlayAndPause}
-                            className='text-white hover:text-white hover:bg-gray-700'
+                            className='text-white hover:text-white hover:bg-gray-700 bg-transparent'
                         >
                             {
                                 playing 
@@ -104,7 +144,7 @@ function VideoPlayer({width = '100%', height='100%', url}) {
                             variant='ghost' 
                             size='icon'
                             onClick={handleRewind}
-                            className='text-white hover:text-white hover:bg-gray-700'
+                            className='text-white hover:text-white hover:bg-gray-700 bg-transparent'
                         >
                             <RotateCcw className='h-6 w-6' />
                         </Button>
@@ -113,7 +153,7 @@ function VideoPlayer({width = '100%', height='100%', url}) {
                             variant='ghost' 
                             size='icon'
                             onClick={handleForward}
-                            className='text-white hover:text-white hover:bg-gray-700'
+                            className='text-white hover:text-white hover:bg-gray-700 bg-transparent'
                         >
                             <RotateCw className='h-6 w-6' />
                         </Button>
@@ -122,7 +162,7 @@ function VideoPlayer({width = '100%', height='100%', url}) {
                             variant='ghost' 
                             size='icon'
                             onClick={handleToggleMute}
-                            className='text-white hover:text-white hover:bg-gray-700'
+                            className='text-white hover:text-white hover:bg-gray-700 bg-transparent'
                         >
                             {
                                 muted 
@@ -137,6 +177,27 @@ function VideoPlayer({width = '100%', height='100%', url}) {
                             onValueChange={value => handleVolumeChange([value[0]/100])}
                             className='w-24'
                         />
+                    </div>
+                    <div className='flex items-center space-x-2'>
+                        <div className='text-white'>
+                            {
+                                formatTime(played * (playerRef?.current?.getDuration() || 0))
+                            } / 
+                            {
+                                formatTime(playerRef?.current?.getDuration() || 0)
+                            }
+                        </div>
+                        <Button
+                            size='icon'
+                            onClick={handleFullScreen}
+                            className='text-white hover:text-white hover:bg-gray-700 bg-transparent'
+                        >
+                            {
+                                fullScreen 
+                                ? <Minimize className='h-6 w-6'/>
+                                : <Maximize className='h-6 w-6'/>
+                            }
+                        </Button>
                     </div>
                 </div>
             </div> )
