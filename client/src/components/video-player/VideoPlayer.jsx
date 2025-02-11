@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react'
 import ReactPlayer from 'react-player'
 import { Slider } from '../ui/slider';
+import { Button } from '../ui/button';
+import { Pause, Play, RotateCcw, RotateCw, Volume2, VolumeX } from 'lucide-react';
 
 function VideoPlayer({width = '100%', height='100%', url}) {
 
@@ -22,6 +24,26 @@ function VideoPlayer({width = '100%', height='100%', url}) {
 
     const handleProgress = () => {
 
+    }
+
+    const handleRewind = () => {
+
+    }
+
+    const handleForward = () => {
+
+    }
+
+    const handleToggleMute = () => {
+
+    }
+
+    const handleSeekChange = () => {
+
+    }
+
+    const handleSeekMouseUp = () => {
+        
     }
 
   return (
@@ -49,10 +71,59 @@ function VideoPlayer({width = '100%', height='100%', url}) {
                     value={[played*100]}
                     max={100}
                     step={0.1}
-                    onValueChange={}
-                    onValueCommit={}
+                    onValueChange={value => 
+                        handleSeekChange([value[0]/100])}
+                    onValueCommit={handleSeekMouseUp}
                     className='w-full mb-4'
                 />
+
+                <div className='flex items-center justify-between'>
+                    <div className='flex items-center space-x-2'>
+                        <Button 
+                            variant='ghost' 
+                            size='icon' 
+                            onClick={handlePlayAndPause}
+                            className='text-white hover:text-primary hover:bg-gray-700'
+                        >
+                            {
+                                playing 
+                                ? <Pause className='h-6 w-6' />  
+                                : <Play className='h-6 w-6' />
+                            }
+                        </Button>
+
+                        <Button 
+                            variant='ghost' 
+                            size='icon'
+                            onClick={handleRewind}
+                            className='text-white hover:text-primary hover:bg-gray-700'
+                        >
+                            <RotateCcw className='h-6 w-6' />
+                        </Button>
+
+                        <Button 
+                            variant='ghost' 
+                            size='icon'
+                            onClick={handleForward}
+                            className='text-white hover:text-primary hover:bg-gray-700'
+                        >
+                            <RotateCw className='h-6 w-6' />
+                        </Button>
+
+                        <Button 
+                            variant='ghost' 
+                            size='icon'
+                            onClick={handleToggleMute}
+                            className='text-white hover:text-primary hover:bg-gray-700'
+                        >
+                            {
+                                muted 
+                                ?  <VolumeX className='h-6 w-6'/>
+                                :  <Volume2 className='h-6 w-6'/>
+                            }
+                        </Button>
+                    </div>
+                </div>
             </div> )
         }
     </div>
