@@ -62,7 +62,7 @@ function Settings() {
           <MultiStepLoader
             loadingStates={loadingStates}
             loading={loading}
-            duration={2000}
+            duration={1500}
           />
         ) : courseLandingFormData?.image ? (
           <img

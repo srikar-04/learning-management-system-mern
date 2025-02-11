@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label.jsx'
 import { courseCurriculumInitialFormData } from '@/config/index.js'
 import { mediaUploadService } from '../../../services/services.js'
 import { MultiStepLoader } from '@/components/ui/multi-step-loader.jsx'
+import VideoPlayer from '@/components/video-player/VideoPlayer.jsx'
 
 function Curriculum() {
 
@@ -137,11 +138,24 @@ function Curriculum() {
                 </div>
 
                <div className='mt-4'>
-                <Input 
+                {
+                  courseCurriculumFormData[index]?.videoUrl 
+                  ?  (
+                    <div className='flex gap-3'>
+                      <VideoPlayer url={ courseCurriculumFormData[index]?.videoUrl  } />
+                      <Button>Replace Video</Button>
+                      <Button variant="destructive">Delete Lecture</Button>
+                    </div>
+                  )
+                  : (
+                    <Input 
                     type='file'
                     accept='video/*,.mkv'
                     onChange = {(e) => handleSingleLectureUpload(e, index)}
                   />
+                  )
+                }
+               
                </div>
 
               </div>
