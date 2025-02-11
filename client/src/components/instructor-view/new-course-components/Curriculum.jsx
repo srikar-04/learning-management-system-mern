@@ -141,10 +141,14 @@ function Curriculum() {
                 {
                   courseCurriculumFormData[index]?.videoUrl 
                   ?  (
-                    <div className='flex gap-3'>
-                      <VideoPlayer url={ courseCurriculumFormData[index]?.videoUrl  } />
-                      <Button>Replace Video</Button>
-                      <Button variant="destructive">Delete Lecture</Button>
+                    <div className='flex flex-col gap-3'>
+                      <VideoPlayer 
+                        url={ courseCurriculumFormData[index]?.videoUrl} 
+                        width='430px'
+                        height='260px'
+                      />
+                      <Button className='w-[50%]'>Replace Video</Button>
+                      <Button className='w-[50%]' variant="destructive">Delete Lecture</Button>
                     </div>
                   )
                   : (
