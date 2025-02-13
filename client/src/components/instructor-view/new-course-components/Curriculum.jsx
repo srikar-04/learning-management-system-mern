@@ -91,6 +91,17 @@ function Curriculum() {
     }
     setLoading(false);
   };
+
+  const handleDleteLecture = async (index) => {
+    const copy = [...courseCurriculumFormData];
+    const videoPublicId = copy[index]?.public_id;
+    const data = await mediaDeleteService(videoPublicId);
+  
+    if(data?.success) {
+      copy[index].videoUrl = ""
+      setCourseCurriculumFormData(copy)
+    }
+  }
   return (
     <Card>
       <CardHeader>
@@ -151,17 +162,23 @@ function Curriculum() {
                     >
                       Replace Video
                     </Button>
-                    <Button className="w-[30%]" variant="destructive">
+                    <Button 
+                      className="w-[30%]" 
+                      variant="destructive"
+                      onClick={() => handleDleteLecture(index)}
+                    >
                       Delete Lecture
                     </Button>
                   </div>
                 ) : (
-                  <input
+                  <div>
+                    <input
                     type="file"
                     ref={(el) => (fileInputRef.current[index] = el)}
                     accept="video/*,.mkv"
                     onChange={(e) => handleSingleLectureUpload(e, index)}
                   />
+                  </div>
                 )}
               </div>
             </div>
