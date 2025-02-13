@@ -23,7 +23,7 @@ router.post('/upload', upload.single('file'), async(req, res) => {
     }
 })
 
-router.delete('/delte/:id',async(req, res) => {
+router.delete('/delete/:id',async(req, res) => {
     try {
 
         const {id} = req.params;

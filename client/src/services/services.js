@@ -49,3 +49,8 @@ export async function mediaUploadService(formData) {
     
     return data
 }
+
+export async function mediaDeleteService(id) {
+    const {data} = await axiosInstance.delete(`/media/delete/${id}`)
+    return data
+}
