@@ -4,6 +4,7 @@ import Settings from '@/components/instructor-view/new-course-components/Setting
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger,  } from '@/components/ui/tabs'
+import { AuthContext } from '@/context/auth-context'
 import { InstructorContext } from '@/context/instructor-context/instructorContext'
 import React, { useContext } from 'react'
 
@@ -13,6 +14,8 @@ function AddNewCoursePage() {
     courseLandingFormData,
     courseCurriculumFormData
   } = useContext(InstructorContext)
+
+  const { auth } = useContext(AuthContext)
 
   function isEmpty(value) {
     if (Array.isArray(value)) {
@@ -48,12 +51,30 @@ function AddNewCoursePage() {
     return hasFreePreview;
   }
 
+  const handleCourseSubmit = async () => {
+    const finalFormData = {
+      instructorId: auth?.user?._id,
+      instructorName: auth?.user?.userName,
+      date: new Date(),
+      ...courseLandingFormData,
+      students: [
+       
+      ],
+      curriculum: courseCurriculumFormData,
+      isPublished: true
+    }
+
+    console.log(finalFormData, 'this is the data that goes to backend');
+    
+  }
+
   return (
     <div className='container mx-auto p-4'>
 
       <div className='flex justify-between'>
         <h1 className='text-3xl font-extrabold mb-5'>Create New Course</h1>
         <Button 
+          onClick = {handleCourseSubmit}
           disabled = {!validateFormData()}
           className="text-sm tracking-wider font-bold px-8"
         >

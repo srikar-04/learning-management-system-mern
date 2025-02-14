@@ -102,7 +102,7 @@ export const fetchInstructorCourseDetailsService = async (id) => {
 }
 export const updateCourseByIdService = async (id, updatedCourseData) => {
     try {
-        const { data } = await axiosInstance.post(`/instructor/course/update/${id}`, updatedCourseData)
+        const { data } = await axiosInstance.put(`/instructor/course/update/${id}`, updatedCourseData)
 
         if(!data?.success) {
             throw new Error('unable to fetch instructor course details in services')
