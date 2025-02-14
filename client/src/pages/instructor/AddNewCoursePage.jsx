@@ -4,18 +4,25 @@ import Settings from '@/components/instructor-view/new-course-components/Setting
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger,  } from '@/components/ui/tabs'
+import { courseCurriculumInitialFormData, courseLandingInitialFormData } from '@/config'
 import { AuthContext } from '@/context/auth-context'
 import { InstructorContext } from '@/context/instructor-context/instructorContext'
+import { addNewCouseService } from '@/services/services'
 import React, { useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function AddNewCoursePage() {
 
   const {
     courseLandingFormData,
-    courseCurriculumFormData
+    courseCurriculumFormData,
+    setCourseCurriculumFormData,
+    setCourseLandingFormData
   } = useContext(InstructorContext)
 
   const { auth } = useContext(AuthContext)
+
+  const navigate = useNavigate()
 
   function isEmpty(value) {
     if (Array.isArray(value)) {
@@ -64,7 +71,13 @@ function AddNewCoursePage() {
       isPublished: true
     }
 
-    console.log(finalFormData, 'this is the data that goes to backend');
+    const reponse = await addNewCouseService(finalFormData)
+
+    if(reponse?.success) {
+      setCourseCurriculumFormData(courseCurriculumInitialFormData)
+      setCourseLandingFormData(courseLandingInitialFormData)
+      navigate(-1)
+    }
     
   }
 

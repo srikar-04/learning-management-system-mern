@@ -14,7 +14,7 @@ const addNewCourse = async (req, res) => {
     });
 
   } catch (error) {
-    console.log(error, "erronr while adding new course, in controller");
+    console.log(error, "error while adding new course, in controller");
     return res.status(500).json({
       success: false,
       msg: "error while adding new course",

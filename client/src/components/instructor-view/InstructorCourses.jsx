@@ -5,7 +5,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { Delete, Edit } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-function InstructorCourses() {
+function InstructorCourses({listOfCourses}) {
 
   const navigate = useNavigate()
 
@@ -28,19 +28,25 @@ function InstructorCourses() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableCell className="font-medium">React Js Full Course 2025</TableCell>
-                <TableCell>100</TableCell>
-                <TableCell>$5000</TableCell>
-                <TableCell className="text-right">
-                    <Button variant = 'ghost' size='sm' className=''>
-                        <Edit className="h-6 w-6" />
-                    </Button>
-                    <Button variant = 'ghost' size='sm' className=''>
-                        <Delete className="h-6 w-6" />
-                    </Button>
-                </TableCell>
-              </TableRow>
+              {
+                listOfCourses && listOfCourses.length > 0 
+                ? listOfCourses.map(course => (
+                  <TableRow key={course?._id}>
+                    <TableCell className="font-medium">{course?.title}</TableCell>
+                    <TableCell>{course?.students?.length}</TableCell>
+                    <TableCell>{course?.pricing}</TableCell>
+                    <TableCell className="text-right">
+                        <Button variant = 'ghost' size='sm' className=''>
+                            <Edit className="h-6 w-6" />
+                        </Button>
+                        <Button variant = 'ghost' size='sm' className=''>
+                            <Delete className="h-6 w-6" />
+                        </Button>
+                    </TableCell>
+                </TableRow>
+                ) ) 
+                : null
+              }
             </TableBody>
           </Table>
         </div>

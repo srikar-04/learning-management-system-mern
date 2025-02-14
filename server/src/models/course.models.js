@@ -4,7 +4,7 @@ const lectureSchema = new Schema({
     title: String,
     freePreview: String,
     videoUrl: String,
-    public_id: Boolean
+    public_id: String
 })
 
 const CourseSchema = new Schema({
