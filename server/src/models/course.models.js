@@ -28,7 +28,8 @@ const CourseSchema = new Schema({
             studentEmail: String
         }
     ],
-    curriculum: [lectureSchema]
+    curriculum: [lectureSchema],
+    isPublished: Boolean
 }, {timestamps: true})
 
 const Course = mongoose.model("Course", CourseSchema)
