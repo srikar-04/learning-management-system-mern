@@ -17,8 +17,6 @@ function Curriculum() {
   const {
     courseCurriculumFormData,
     setCourseCurriculumFormData,
-    mediaUploadProgress,
-    setMediaUploadProgress,
   } = useContext(InstructorContext);
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef([]);
