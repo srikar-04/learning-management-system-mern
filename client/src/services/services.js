@@ -54,3 +54,64 @@ export async function mediaDeleteService(id) {
     const {data} = await axiosInstance.delete(`/media/delete/${id}`)
     return data
 }
+
+export const fetchInstructorCourseListService = async () => {
+   try {
+
+        const { data } = await axiosInstance.get('/instructor/course/get')
+
+        if(!data?.success) {
+            throw new Error('unable to fetch instructor course list in services')
+        }
+
+        return data
+
+   } catch (error) {
+        console.error('error while fetching instructor courses : ', error);
+        throw error
+   }
+}
+
+export const addNewCouseService = async (courseData) => {
+    try {
+        const { data } = await axiosInstance.post('/instructor/course/add', courseData)
+
+        if(!data?.success) {
+            throw new Error('unable to add instructor course details in services')
+        }
+    
+        return data
+    } catch (error) {
+        console.error('error while adding new course in services : ', error);
+        throw error
+    }
+}
+export const fetchInstructorCourseDetailsService = async (id) => {
+    try {
+        const { data } = await axiosInstance.get(`/instructor/course/get/details/${id}`)
+
+        if(!data?.success) {
+            throw new Error('unable to fetch instructor course details in services')
+        }
+    
+        return data
+    } catch (error) {
+        console.error('error while adding new course in services : ', error);
+        throw error
+    }
+}
+export const updateCourseByIdService = async (id, updatedCourseData) => {
+    try {
+        const { data } = await axiosInstance.post(`/instructor/course/update/${id}`, updatedCourseData)
+
+        if(!data?.success) {
+            throw new Error('unable to fetch instructor course details in services')
+        }
+    
+        return data
+    } catch (error) {
+        console.error('error while adding new course in services : ', error);
+        throw error
+    }
+}
+
