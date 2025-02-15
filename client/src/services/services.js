@@ -102,6 +102,8 @@ export const fetchInstructorCourseDetailsService = async (id) => {
 }
 export const updateCourseByIdService = async (id, updatedCourseData) => {
     try {
+        console.log('inside update services');
+        
         const { data } = await axiosInstance.put(`/instructor/course/update/${id}`, updatedCourseData)
 
         if(!data?.success) {

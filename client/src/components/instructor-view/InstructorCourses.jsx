@@ -1,19 +1,38 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { Delete, Edit } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { InstructorContext } from "@/context/instructor-context/instructorContext";
+import { courseCurriculumInitialFormData, courseLandingInitialFormData } from "@/config";
 
 function InstructorCourses({listOfCourses}) {
 
   const navigate = useNavigate()
+  
+  
+  const {
+    setCurrentEditCourseId,
+    setCourseCurriculumFormData,
+    setCourseLandingFormData,
+  } = useContext(InstructorContext)
 
   return (
     <Card>
       <CardHeader className="flex justify-between flex-row items-center">
         <CardTitle className="text-3xl font-extrabold">All Courses</CardTitle>
-        <Button onClick={() => navigate('/instructor/create-course')} className="p-6">Create New Course</Button>
+        <Button 
+          onClick={() =>  {
+            setCourseCurriculumFormData(() => courseCurriculumInitialFormData)
+            setCourseLandingFormData(() => courseLandingInitialFormData)
+            navigate('/instructor/create-course');
+          }
+          } 
+          className="p-6"
+        >
+          Create New Course
+        </Button>
       </CardHeader>
 
       <CardContent>
@@ -38,11 +57,16 @@ function InstructorCourses({listOfCourses}) {
                     <TableCell className="text-right">
                         <Button 
                           variant = 'ghost' size='sm' 
-                          onClick={() => navigate(`/instructor/edit-course/${course?._id}`)}
+                          onClick={() => {
+                            setCurrentEditCourseId(null)
+                            navigate(`/instructor/edit-course/${course?._id}`)
+                            setCourseLandingFormData(() => courseLandingInitialFormData)
+                            setCourseCurriculumFormData(() => courseCurriculumInitialFormData)
+                          }}
                         >
                           <Edit className="h-6 w-6" />
                         </Button>
-                        
+
                         <Button variant = 'ghost' size='sm' className=''>
                             <Delete className="h-6 w-6" />
                         </Button>

@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger,  } from '@/components/ui/tabs
 import { courseCurriculumInitialFormData, courseLandingInitialFormData } from '@/config'
 import { AuthContext } from '@/context/auth-context'
 import { InstructorContext } from '@/context/instructor-context/instructorContext'
-import { addNewCouseService, fetchInstructorCourseDetailsService } from '@/services/services'
+import { addNewCouseService, fetchInstructorCourseDetailsService, updateCourseByIdService } from '@/services/services'
 import React, { useContext, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -77,11 +77,18 @@ function AddNewCoursePage() {
       isPublished: true
     }
 
-    const reponse = await addNewCouseService(finalFormData)
+    console.log(finalFormData, 'final form data');
+    
+
+    const reponse = 
+      currentEditCourseId !== null 
+      ? await updateCourseByIdService(currentEditCourseId, finalFormData)
+      : await addNewCouseService(finalFormData)
 
     if(reponse?.success) {
       setCourseCurriculumFormData(courseCurriculumInitialFormData)
       setCourseLandingFormData(courseLandingInitialFormData)
+      setCurrentEditCourseId(null)
       navigate(-1)
     }
     
@@ -103,8 +110,8 @@ function AddNewCoursePage() {
   }
 
   useEffect( () => {
-    if(params) setCurrentEditCourseId(params.id)
-  }, [params])
+    if(params?.id) setCurrentEditCourseId(params?.id)
+  }, [params?.id])
 
   useEffect( () => {
     if(currentEditCourseId !== null) fetchCurrentCourseDetails()
