@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
@@ -34,11 +34,15 @@ function InstructorCourses({listOfCourses}) {
                   <TableRow key={course?._id}>
                     <TableCell className="font-medium">{course?.title}</TableCell>
                     <TableCell>{course?.students?.length}</TableCell>
-                    <TableCell>{course?.pricing}</TableCell>
+                    <TableCell>{(course?.pricing)*(course?.students?.length)}</TableCell>
                     <TableCell className="text-right">
-                        <Button variant = 'ghost' size='sm' className=''>
-                            <Edit className="h-6 w-6" />
+                        <Button 
+                          variant = 'ghost' size='sm' 
+                          onClick={() => navigate(`/instructor/edit-course/${course?._id}`)}
+                        >
+                          <Edit className="h-6 w-6" />
                         </Button>
+                        
                         <Button variant = 'ghost' size='sm' className=''>
                             <Delete className="h-6 w-6" />
                         </Button>

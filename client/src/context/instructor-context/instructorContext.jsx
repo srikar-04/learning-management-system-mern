@@ -14,6 +14,8 @@ export default function InstructorProvider({children}) {
 
     const [instructorCourseList, setInstructorCourseList] = useState([])
 
+    const [currentEditCourseId, setCurrentEditCourseId] = useState(null)
+
     return (
         <InstructorContext.Provider
             value={{
@@ -24,7 +26,9 @@ export default function InstructorProvider({children}) {
                 mediaUploadProgress,
                 setMediaUploadProgress,
                 setInstructorCourseList,
-                instructorCourseList
+                instructorCourseList,
+                setCurrentEditCourseId,
+                currentEditCourseId
             }}
         >{children}</InstructorContext.Provider>
     )

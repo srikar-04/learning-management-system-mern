@@ -7,9 +7,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger,  } from '@/components/ui/tabs
 import { courseCurriculumInitialFormData, courseLandingInitialFormData } from '@/config'
 import { AuthContext } from '@/context/auth-context'
 import { InstructorContext } from '@/context/instructor-context/instructorContext'
-import { addNewCouseService } from '@/services/services'
-import React, { useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { addNewCouseService, fetchInstructorCourseDetailsService } from '@/services/services'
+import React, { useContext, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
 function AddNewCoursePage() {
 
@@ -17,8 +17,14 @@ function AddNewCoursePage() {
     courseLandingFormData,
     courseCurriculumFormData,
     setCourseCurriculumFormData,
-    setCourseLandingFormData
+    setCourseLandingFormData,
+    currentEditCourseId,
+    setCurrentEditCourseId
   } = useContext(InstructorContext)
+
+  const params = useParams()
+  console.log(params, 'params');
+  
 
   const { auth } = useContext(AuthContext)
 
@@ -80,6 +86,29 @@ function AddNewCoursePage() {
     }
     
   }
+
+  const fetchCurrentCourseDetails = async () => {
+    const response  = await fetchInstructorCourseDetailsService(currentEditCourseId)
+
+    if(response?.success) {
+      const setCourseformData = Object.keys(courseLandingInitialFormData).reduce( (acc, key) => {
+        acc[key] = response?.data[key] || courseLandingInitialFormData[key]
+
+        return acc
+      }, {})
+      console.log(setCourseformData, 'setCourse form data');
+      setCourseLandingFormData(setCourseformData)
+      setCourseCurriculumFormData(response?.data?.curriculum)
+    }
+  }
+
+  useEffect( () => {
+    if(params) setCurrentEditCourseId(params.id)
+  }, [params])
+
+  useEffect( () => {
+    if(currentEditCourseId !== null) fetchCurrentCourseDetails()
+  }, [currentEditCourseId])
 
   return (
     <div className='container mx-auto p-4'>

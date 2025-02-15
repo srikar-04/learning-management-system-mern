@@ -10,6 +10,7 @@ import { Input } from "../../../components/ui/input.jsx";
 import { InstructorContext } from "@/context/instructor-context/instructorContext.jsx";
 import { mediaUploadService } from "../../../services/services.js";
 import { MultiStepLoader } from "@/components/ui/multi-step-loader.jsx";
+import { Button } from "@/components/ui/button.jsx";
 
 function Settings() {
   const { courseLandingFormData, setCourseLandingFormData } =
@@ -49,8 +50,14 @@ function Settings() {
         setLoading(false);
       }
     }
-  };
-  console.log(courseLandingFormData);
+  }
+
+  console.log(courseLandingFormData, 'courseLandingFormData');
+
+  const handleImageDelete = () => {
+    setCourseLandingFormData((prevData) => ({ ...prevData, image: null }));
+  }
+
 
   return (
     <Card>
@@ -65,13 +72,24 @@ function Settings() {
             duration={1500}
           />
         ) : courseLandingFormData?.image ? (
-          <img
+          <>
+            <img
             src={courseLandingFormData.image}
             alt="Course Image"
             // onLoad tells whether the image is completely loaded or not
             onLoad={() => setLoading(false)}
             className="w-full h-auto object-cover"
           />
+          <div>
+            <Button 
+              className='mt-4'
+              variant="destructive"
+              onClick={handleImageDelete}
+            >
+              Delete Image
+            </Button>
+          </div>
+          </>
         ) : (
           <div className="flex flex-col gap-3">
             <Label>Upload Course Image</Label>
