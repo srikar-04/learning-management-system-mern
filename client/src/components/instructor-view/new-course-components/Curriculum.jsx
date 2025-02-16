@@ -7,11 +7,13 @@ import { Switch } from "@/components/ui/switch.jsx";
 import { Label } from "@/components/ui/label.jsx";
 import { courseCurriculumInitialFormData } from "@/config/index.js";
 import {
+  mediaBulkUploadService,
   mediaDeleteService,
   mediaUploadService,
 } from "../../../services/services.js";
 import { MultiStepLoader } from "@/components/ui/multi-step-loader.jsx";
 import VideoPlayer from "@/components/video-player/VideoPlayer.jsx";
+import { Upload } from "lucide-react";
 
 function Curriculum() {
   const {
@@ -20,6 +22,7 @@ function Curriculum() {
   } = useContext(InstructorContext);
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef([]);
+  const bulkUploadInputRef = useRef(null)
   const loadingStates = [
     { text: "uploading file" },
     { text: "fetching details" },
@@ -100,10 +103,86 @@ function Curriculum() {
       setCourseCurriculumFormData(copy)
     }
   }
+
+
+  const handleBulkUpload = () => {
+    bulkUploadInputRef.current.click()
+  }
+
+  const isFormDataEmpty = (array) => {
+    return array.every( obj => {
+      return Object.entries(obj).every(([key, value])=>{
+        if(typeof value === 'boolean') {
+          return true
+        }
+        return value === ''
+      })
+    })
+  }
+
+  async function handleMediaBulkUpload(e) {
+    const selectedFiles = Array.from(e.target.files);
+    const bulkFormData = new FormData();
+
+    selectedFiles.forEach(fileItem => bulkFormData.append('files', fileItem))
+
+    try {
+
+      setLoading(true)
+      const response = await mediaBulkUploadService(bulkFormData)
+
+      console.log(response, 'bulk');
+      if(response.success) {
+        let copy = isFormDataEmpty(courseCurriculumFormData) ? [] : [...courseCurriculumFormData]
+
+        copy = [
+          ...copy,
+          ...response?.data.map( (item, index) => ({
+            videoUrl: item?.url,
+            public_id: item?.public_id,
+            title: `Lecture ${index+copy.length+1}`,
+            freePreview: false
+          }))
+        ]
+
+        setCourseCurriculumFormData(copy)
+
+        console.log(copy, 'copied version');
+        
+      }
+      
+      setLoading(false)
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className='flex flex-row justify-between'>
         <CardTitle>Create Course Curriculum</CardTitle>
+        <div>
+          <Input 
+            type='file'
+            ref={bulkUploadInputRef}
+            accept='video/*,.mkv'
+            multiple
+            className='hidden'
+            id='bulk-media-upload'
+            onChange={handleMediaBulkUpload}
+          />
+          <Button
+            as='label'
+            htmlFor='bulk-media-upload'
+            variant='outline'
+            className='cursor-pointer'
+            onClick={handleBulkUpload}
+          >
+            <Upload className="w-4 h-4 mr-2"/>
+            Bulk Upload
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         <Button disabled={!isCourseFormDataValid()} onClick={handleNewLecture}>

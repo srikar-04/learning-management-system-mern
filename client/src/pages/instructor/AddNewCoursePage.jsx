@@ -23,7 +23,7 @@ function AddNewCoursePage() {
   } = useContext(InstructorContext)
 
   const params = useParams()
-  console.log(params, 'params');
+  // console.log(params, 'params');
   
 
   const { auth } = useContext(AuthContext)
