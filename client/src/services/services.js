@@ -123,3 +123,35 @@ export async function mediaBulkUploadService(formData) {
     return data
 }
 
+export const fetchStudentCourseListService = async () => {
+    try {
+ 
+        const { data } = await axiosInstance.get('/student/course/get')
+
+        if(!data?.success) {
+            throw new Error('unable to fetch student course list in services')
+        }
+
+        return data
+ 
+    } catch (error) {
+        console.error('error while fetching student courses : ', error);
+        throw error
+    }
+}
+
+export const fetchStudentCourseDetailsService = async (id) => {
+    try {
+        const { data } = await axiosInstance.get(`/student/course/get/details/${id}`)
+
+        if(!data?.success) {
+            throw new Error('unable to fetch student course details in services')
+        }
+    
+        return data
+    } catch (error) {
+        console.error('error while fetching course details in services : ', error);
+        throw error
+    }
+}
+
