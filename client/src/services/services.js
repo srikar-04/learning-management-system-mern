@@ -21,7 +21,7 @@ export async function checkAuthService() {
     
     try {
         const { data } = await axiosInstance.get('auth/check-auth')
-        console.log(data, 'data fetched in check auth services in second trip');
+        // console.log(data, 'data fetched in check auth services in second trip');
        if(data) {
         return data
        } else {

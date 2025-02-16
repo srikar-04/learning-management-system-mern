@@ -1,12 +1,13 @@
 import { GraduationCap, LogOut, TvMinimalPlay } from 'lucide-react'
 import React, { useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../ui/button'
 import { AuthContext } from '@/context/auth-context'
 
 function StudentHeader() {
 
   const { resetCredentials } = useContext(AuthContext)
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     resetCredentials()
@@ -26,7 +27,7 @@ function StudentHeader() {
           </Link>
 
           <div className='flex items-center space-x-1'>
-            <Button variant='ghost' className='text-[14px] md:text-[15px] font-medium'>
+            <Button onClick={() => navigate('/courses')} variant='ghost' className='text-[14px] md:text-[15px] font-medium'>
               Explore Courses
             </Button>
           </div>

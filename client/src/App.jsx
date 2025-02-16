@@ -9,6 +9,7 @@ import StudentLayout from './components/student-view/StudentLayout'
 import StudentHome from './pages/student/StudentHome'
 import NotFoundPage from './pages/not-found/NotFoundPage'
 import AddNewCoursePage from './pages/instructor/AddNewCoursePage'
+import StudentCoursesPage from './pages/student/StudentCoursesPage'
 
 function App() {
 
@@ -76,6 +77,7 @@ function App() {
        >
           <Route path='home' element={<StudentHome />} />
           <Route path='' element={<StudentHome />} />
+          <Route path='courses' element={<StudentCoursesPage />} />
        </Route>
 
         <Route path='*' element={<NotFoundPage />} />
