@@ -1,8 +1,15 @@
 import { Button } from '@/components/ui/button'
 import { courseCategories } from '@/config'
-import React from 'react'
+import { studentContext } from '@/context/student-context/studentContext'
+import React, { useContext } from 'react'
 
 function StudentHome() {
+
+  const {
+    studentCourseList,
+    setStudentCourseList
+  } = useContext(studentContext)
+
   return (
     <div className='min-h-screen bg-white'>
 
