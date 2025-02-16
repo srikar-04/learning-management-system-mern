@@ -6,7 +6,7 @@ import { connectDB } from './DB/index.js';
 import authRoutes from './routes/auth.routes.js'
 import mediaRoutes from './routes/media.routes.js'
 import instructorCourseRoutes from './routes/course.routes.js'
-
+import studentCourseRoutes from './routes/studentCourse.routes.js'
 
 
 const app = express();
@@ -34,6 +34,7 @@ app.use(express.static("public")) // for storing static files like images
 app.use('/auth', authRoutes)
 app.use('/media', mediaRoutes)
 app.use('/instructor/course', instructorCourseRoutes)
+app.use('/student/course', studentCourseRoutes)
 
 // DB Connection
 const PORT = process.env.PORT || 5000
