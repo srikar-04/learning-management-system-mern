@@ -94,14 +94,17 @@ function Curriculum() {
   };
 
   const handleDleteLecture = async (index) => {
-    const copy = [...courseCurriculumFormData];
+    let copy = [...courseCurriculumFormData];
     const videoPublicId = copy[index]?.public_id;
+    setLoading(true)
     const data = await mediaDeleteService(videoPublicId);
   
     if(data?.success) {
-      copy[index].videoUrl = ""
+      // copy[index].videoUrl = ""
+      copy = copy.filter( (_,currIndex) => currIndex !== index)
       setCourseCurriculumFormData(copy)
     }
+    setLoading(false)
   }
 
 
