@@ -24,12 +24,13 @@ function StudentHeader() {
                 LMS Learn
               </span>
           </Link>
-        </div>
 
-        <div className='flex items-center space-x-1'>
-          <Button variant='ghost' className='text-[14px] md:text-[15px] font-medium'>
-            Explore Courses
-          </Button>
+          <div className='flex items-center space-x-1'>
+            <Button variant='ghost' className='text-[14px] md:text-[15px] font-medium'>
+              Explore Courses
+            </Button>
+          </div>
+
         </div>
 
         <div className='flex items-center space-x-4'>
