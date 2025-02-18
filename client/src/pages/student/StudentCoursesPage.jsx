@@ -17,7 +17,8 @@ import { studentContext } from "@/context/student-context/studentContext.jsx";
 import { Card, CardContent, CardTitle } from "@/components/ui/card.jsx";
 
 function StudentCoursesPage() {
-  const [sort, setSort] = useState("");
+  const [sort, setSort] = useState("price-lowtohigh");
+  const [filter, setFilter] = useState({})
 
   const {
     studentCourseList,
@@ -40,8 +41,8 @@ function StudentCoursesPage() {
     fetchAllStudentCouses()
   }, [])
 
-  const handleFilterOnChange = () => {
-
+  const handleFilterOnChange = (item, id) => {
+    
   }
 
   return (
