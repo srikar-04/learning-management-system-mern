@@ -15,6 +15,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { fetchStudentCourseListService } from "@/services/services.js";
 import { studentContext } from "@/context/student-context/studentContext.jsx";
 import { Card, CardContent, CardTitle } from "@/components/ui/card.jsx";
+import { useSearchParams } from "react-router-dom";
 
 function StudentCoursesPage() {
   const [sort, setSort] = useState("price-lowtohigh");
@@ -24,6 +25,7 @@ function StudentCoursesPage() {
     studentCourseList,
     setStudentCourseList
   } = useContext(studentContext)
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const fetchAllStudentCouses = async () => {
     const response = await fetchStudentCourseListService();
@@ -37,13 +39,55 @@ function StudentCoursesPage() {
     // console.log(response.data, 'student courses in useEffect');
   }
 
+  const createSearchPraramsHelper = (filter) => {
+    const queryParams = [];
+
+    for(const [key, value] of Object.entries(filter)) {
+      if(Array.isArray(value) && value.length > 0) {
+        const paramValue = value.join(',')
+        queryParams.push(`${key}=${encodeURIComponent(paramValue)}`)
+      }
+    }
+
+    return queryParams.join('&')
+  }
+
+  useEffect( () => {
+    const buildQueryStringForFilters = createSearchPraramsHelper(filter)
+
+    setSearchParams(new URLSearchParams(buildQueryStringForFilters))
+  }, [filter])
+
   useEffect( () => {
     fetchAllStudentCouses()
   }, [])
 
-  const handleFilterOnChange = (item, id) => {
+  const handleFilterOnChange = (item, option) => {
+    let copiedFilter = {...filter};
+
+    const indexOfCurrentSection = Object.keys(copiedFilter).indexOf(item);
     
+    if(indexOfCurrentSection === -1) {
+      copiedFilter = {
+        ...copiedFilter,
+        [item]: [option.id]
+      }
+    } else {
+      const indexOfCurrentOption = copiedFilter[item].indexOf(option.id)
+
+      if(indexOfCurrentOption === -1) {
+        copiedFilter[item].push(option.id)
+      } else {
+        copiedFilter[item].splice(indexOfCurrentOption, 1)
+      }
+    }
+    setFilter(copiedFilter);
+    sessionStorage.setItem('filters', JSON.stringify(copiedFilter))
+    console.log(copiedFilter);
   }
+
+  console.log(filter);
+  
 
   return (
     <div className="container mx-6 p-4">
@@ -56,11 +100,15 @@ function StudentCoursesPage() {
                 <h3 className="font-bold mb-3">{keyItem.toUpperCase()}</h3>
                 <div className="grid gap-2 mt-2">
                   {filterOptions[keyItem].map((option) => (
-                    <Label className="flex font-medium items-center gap-3">
+                    <Label key={option.id} className="flex font-medium items-center gap-3">
                       <Checkbox
-                        checked={false}
+                        checked={
+                          filter && Object.keys(filter).length>0
+                          && filter[keyItem] &&
+                          filter[keyItem].indexOf(option.id) > -1
+                        }
                         onCheckedChange={() =>
-                          handleFilterOnChange(keyItem, option.id)
+                          handleFilterOnChange(keyItem, option)
                         }
                       />
                         {option.label}
