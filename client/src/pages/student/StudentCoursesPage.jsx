@@ -16,122 +16,131 @@ import { fetchStudentCourseListService } from "@/services/services.js";
 import { studentContext } from "@/context/student-context/studentContext.jsx";
 import { Card, CardContent, CardTitle } from "@/components/ui/card.jsx";
 import { useSearchParams } from "react-router-dom";
+import { Skeleton } from "@/components/ui/skeleton.jsx";
+import ClipLoader from "react-spinners/ClipLoader";
 
 function StudentCoursesPage() {
   const [sort, setSort] = useState("price-lowtohigh");
-  const [filter, setFilter] = useState({})
+  const [filter, setFilter] = useState({});
+  const [loading, setLoading] = useState(false);
+  let [color, setColor] = useState("#ffffff");
+  const override = {
+    display: "block",
+    margin: "0 auto",
+    borderColor: "red",
+  };
 
-  const {
-    studentCourseList,
-    setStudentCourseList
-  } = useContext(studentContext)
+  const { studentCourseList, setStudentCourseList } =
+    useContext(studentContext);
 
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const fetchAllStudentCouses = async (filter, sort) => {
-    
-    let queryObj = { sortBy: sort } 
-  
-    
+    let queryObj = { sortBy: sort };
+
     Object.entries(filter).forEach(([key, value]) => {
       if (Array.isArray(value) && value.length > 0) {
-        queryObj[key] = value.join(',')
+        queryObj[key] = value.join(",");
       }
-    })
-    
-  
-    const query = new URLSearchParams(queryObj)
+    });
+
+    const query = new URLSearchParams(queryObj);
     // console.log(query.toString(), 'query sending to services in main page');
-    
+
     const response = await fetchStudentCourseListService(query);
 
     // console.log(response, 'final response in main page');
-    
-    if(response.success) {
-      setStudentCourseList(response.data)
-    }
 
-  }
-  
-  
+    if (response.success) {
+      setStudentCourseList(response.data);
+    }
+  };
+
   const createSearchPraramsHelper = (filter) => {
     const queryParams = [];
-    
-    for(const [key, value] of Object.entries(filter)) {
-      if(Array.isArray(value) && value.length > 0) {
-        const paramValue = value.join(',')
-        queryParams.push(`${key}=${encodeURIComponent(paramValue)}`)
+
+    for (const [key, value] of Object.entries(filter)) {
+      if (Array.isArray(value) && value.length > 0) {
+        const paramValue = value.join(",");
+        queryParams.push(`${key}=${encodeURIComponent(paramValue)}`);
       }
     }
 
-    return queryParams.join('&')
-  }
-  
-  useEffect( () => {
-    const buildQueryStringForFilters = createSearchPraramsHelper(filter)
-    // console.log(buildQueryStringForFilters, 'param string in main page');
-    
-    setSearchParams(new URLSearchParams(buildQueryStringForFilters))
-  }, [filter])
-  
-  useEffect( () => {
-    if(filter && filter !== null && sort && sort !== null) {
-      fetchAllStudentCouses(filter, sort)
+    return queryParams.join("&");
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    const buildQueryStringForFilters = createSearchPraramsHelper(filter);
+
+    setSearchParams(new URLSearchParams(buildQueryStringForFilters));
+    setLoading(false);
+  }, [filter]);
+
+  useEffect(() => {
+    setLoading(true);
+    if (filter && filter !== null && sort && sort !== null) {
+      fetchAllStudentCouses(filter, sort);
     }
-  }, [filter, sort])
+    setLoading(false);
+  }, [filter, sort]);
 
-  useEffect( () => {
-    setSort('price-lowtohigh')
-    
-    console.log(sort, 'sort state in useEffect');
-    
-    const storedFilter = sessionStorage.getItem('filters')
+  useEffect(() => {
+    setLoading(true);
+    setSort("price-lowtohigh");
 
-    const initializeFilterState = storedFilter && storedFilter !== "null" ? JSON.parse(storedFilter) : {}
+    // console.log(sort, 'sort state in useEffect');
 
-    console.log(initializeFilterState, 'value to be stored in state, currently in useEffect');
+    const storedFilter = sessionStorage.getItem("filters");
 
-    setFilter(initializeFilterState)
-  }, [])
+    const initializeFilterState =
+      storedFilter && storedFilter !== "null" ? JSON.parse(storedFilter) : {};
 
-  useEffect( () => {
+    console.log(
+      initializeFilterState,
+      "value to be stored in state, currently in useEffect"
+    );
+
+    setFilter(() => initializeFilterState);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
     return () => {
-      sessionStorage.removeItem('filters')
-    }
-  }, [])
+      sessionStorage.removeItem("filters");
+    };
+  }, []);
 
-  
-  
   const handleFilterOnChange = (item, option) => {
     let copiedFilter = {};
-    if(filter !== null) {
-      copiedFilter = {...filter}
+    if (filter !== null) {
+      copiedFilter = { ...filter };
     } else {
-      copiedFilter[item] = [option.id]
+      copiedFilter[item] = [option.id];
     }
-    
+
     if (!copiedFilter[item]) {
-      copiedFilter[item] = [option.id]
+      copiedFilter[item] = [option.id];
     } else {
-      const indexOfCurrentOption = copiedFilter[item].indexOf(option.id)
-      
+      const indexOfCurrentOption = copiedFilter[item].indexOf(option.id);
+
       if (indexOfCurrentOption === -1) {
-        copiedFilter[item].push(option.id)
+        copiedFilter[item].push(option.id);
       } else {
-        copiedFilter[item].splice(indexOfCurrentOption, 1)
+        copiedFilter[item].splice(indexOfCurrentOption, 1);
         // Remove the key if array is empty
         if (copiedFilter[item].length === 0) {
-          delete copiedFilter[item]
+          delete copiedFilter[item];
         }
       }
     }
-    
+
     setFilter(copiedFilter);
-    sessionStorage.setItem('filters', JSON.stringify(copiedFilter))
-  }
-  
-  console.log(filter, 'filter state');
-  
+    sessionStorage.setItem("filters", JSON.stringify(copiedFilter));
+  };
+
+  console.log(filter, "filter state");
+
   return (
     <div className="container mx-6 p-4">
       <h1 className="text-3xl font-bold mb-4">All Courses</h1>
@@ -143,18 +152,22 @@ function StudentCoursesPage() {
                 <h3 className="font-bold mb-3">{keyItem.toUpperCase()}</h3>
                 <div className="grid gap-2 mt-2">
                   {filterOptions[keyItem].map((option) => (
-                    <Label key={option.id} className="flex font-medium items-center gap-3">
+                    <Label
+                      key={option.id}
+                      className="flex font-medium items-center gap-3"
+                    >
                       <Checkbox
                         checked={
-                          filter && Object.keys(filter).length>0
-                          && filter[keyItem] &&
+                          filter &&
+                          Object.keys(filter).length > 0 &&
+                          filter[keyItem] &&
                           filter[keyItem].indexOf(option.id) > -1
                         }
                         onCheckedChange={() =>
                           handleFilterOnChange(keyItem, option)
                         }
                       />
-                        {option.label}
+                      {option.label}
                     </Label>
                   ))}
                 </div>
@@ -197,44 +210,55 @@ function StudentCoursesPage() {
           </div>
 
           <div className="space-y-4">
-              {
-                studentCourseList && studentCourseList.length > 0
-                ? studentCourseList.map(courseItem => (
-                  <Card className='cursor-pointer' key={courseItem?._id}>
+            {loading ? (
+               <ClipLoader
+               color={color}
+               loading={loading}
+               cssOverride={override}
+               size={150}
+               aria-label="Loading Spinner"
+               data-testid="loader"
+             />
+            ) : studentCourseList && studentCourseList.length > 0 ? (
+              studentCourseList.map((courseItem) => (
+                <Card className="cursor-pointer" key={courseItem?._id}>
+                  <CardContent className="flex gap-4 p-4">
+                    <div className="w-48 h-32 flex-shrink-0">
+                      <img
+                        className="w-full h-full object-cover"
+                        src={courseItem?.image}
+                        alt="course thumbnail"
+                      />
+                    </div>
 
-                    <CardContent className='flex gap-4 p-4'>
-
-                      <div className="w-48 h-32 flex-shrink-0">
-                        <img className="w-full h-full object-cover" src={courseItem?.image} alt="course thumbnail" />
-                      </div>
-
-                      <div className="flex-1 ">
-                        <CardTitle className='text-xl mb-2' >
-                          {courseItem?.title}
-                        </CardTitle>
-                        <p className="text-sm text-gray-600 mb-1">
-                          created by   <span className="font-bold text-gray-700">
-                            {courseItem?.instructorName}
-                          </span>
-                        </p>
-                        <p className="text-[17px] text-gray-600 mt-3 mb-2">
-                          {
-                            `${courseItem?.curriculum?.length} ${courseItem?.curriculum?.length <=1 ? 'Lecture' : 'Lectures'} - ${courseItem?.level?.toUpperCase()} Level`
-                          }
-                        </p>
-                        <p className="font-bold text-lg">
-                          ${courseItem?.pricing}
-                        </p>
-                      </div>
-
-                    </CardContent>
-
-                  </Card>
-                ))
-                : <h1>No Courses Found</h1>
-              }
+                    <div className="flex-1 ">
+                      <CardTitle className="text-xl mb-2">
+                        {courseItem?.title}
+                      </CardTitle>
+                      <p className="text-sm text-gray-600 mb-1">
+                        created by{" "}
+                        <span className="font-bold text-gray-700">
+                          {courseItem?.instructorName}
+                        </span>
+                      </p>
+                      <p className="text-[17px] text-gray-600 mt-3 mb-2">
+                        {`${courseItem?.curriculum?.length} ${
+                          courseItem?.curriculum?.length <= 1
+                            ? "Lecture"
+                            : "Lectures"
+                        } - ${courseItem?.level?.toUpperCase()} Level`}
+                      </p>
+                      <p className="font-bold text-lg">
+                        ${courseItem?.pricing}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <h1 className="font-extrabold text-4xl">No Courses Found</h1>
+            )}
           </div>
-
         </main>
       </div>
     </div>
