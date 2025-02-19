@@ -25,23 +25,38 @@ function StudentCoursesPage() {
     studentCourseList,
     setStudentCourseList
   } = useContext(studentContext)
+
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const fetchAllStudentCouses = async () => {
-    const response = await fetchStudentCourseListService();
+  const fetchAllStudentCouses = async (filter, sort) => {
+    
+    let queryObj = { sortBy: sort } 
+  
+    
+    Object.entries(filter).forEach(([key, value]) => {
+      if (Array.isArray(value) && value.length > 0) {
+        queryObj[key] = value.join(',')
+      }
+    })
+    
+  
+    const query = new URLSearchParams(queryObj)
+    // console.log(query.toString(), 'query sending to services in main page');
+    
+    const response = await fetchStudentCourseListService(query);
 
-    if(!response?.success) {
-      throw new Error('error fetching student courses')
+    // console.log(response, 'final response in main page');
+    
+    if(response.success) {
+      setStudentCourseList(response.data)
     }
 
-    setStudentCourseList(response.data)
-
-    // console.log(response.data, 'student courses in useEffect');
   }
-
+  
+  
   const createSearchPraramsHelper = (filter) => {
     const queryParams = [];
-
+    
     for(const [key, value] of Object.entries(filter)) {
       if(Array.isArray(value) && value.length > 0) {
         const paramValue = value.join(',')
@@ -51,43 +66,46 @@ function StudentCoursesPage() {
 
     return queryParams.join('&')
   }
-
+  
   useEffect( () => {
     const buildQueryStringForFilters = createSearchPraramsHelper(filter)
-
+    // console.log(buildQueryStringForFilters, 'param string in main page');
+    
     setSearchParams(new URLSearchParams(buildQueryStringForFilters))
   }, [filter])
-
+  
   useEffect( () => {
-    fetchAllStudentCouses()
-  }, [])
+    if(filter !== null && sort !== null) {
+      fetchAllStudentCouses(filter, sort)
+    }
+  }, [filter, sort])
 
   const handleFilterOnChange = (item, option) => {
     let copiedFilter = {...filter};
-
-    const indexOfCurrentSection = Object.keys(copiedFilter).indexOf(item);
-    
-    if(indexOfCurrentSection === -1) {
-      copiedFilter = {
-        ...copiedFilter,
-        [item]: [option.id]
-      }
+  
+    if (!copiedFilter[item]) {
+      copiedFilter[item] = [option.id]
     } else {
       const indexOfCurrentOption = copiedFilter[item].indexOf(option.id)
-
-      if(indexOfCurrentOption === -1) {
+      
+      if (indexOfCurrentOption === -1) {
         copiedFilter[item].push(option.id)
       } else {
         copiedFilter[item].splice(indexOfCurrentOption, 1)
+        // Remove the key if array is empty
+        if (copiedFilter[item].length === 0) {
+          delete copiedFilter[item]
+        }
       }
     }
+    
     setFilter(copiedFilter);
     sessionStorage.setItem('filters', JSON.stringify(copiedFilter))
-    console.log(copiedFilter);
   }
 
-  console.log(filter);
-  
+  // console.log(studentCourseList, 'final courselist in main page');
+  // console.log(searchParams.toString(), 'searchParams in main page');
+  // console.log(filter, 'filter in main page');
 
   return (
     <div className="container mx-6 p-4">
@@ -96,7 +114,7 @@ function StudentCoursesPage() {
         <aside className="w-full md:w-64 space-y-4">
           <div className="space-y-4">
             {Object.keys(filterOptions).map((keyItem) => (
-              <div className="p-4 space-y-4">
+              <div key={keyItem.id} className="p-4 space-y-4">
                 <h3 className="font-bold mb-3">{keyItem.toUpperCase()}</h3>
                 <div className="grid gap-2 mt-2">
                   {filterOptions[keyItem].map((option) => (

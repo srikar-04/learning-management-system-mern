@@ -102,7 +102,7 @@ export const fetchInstructorCourseDetailsService = async (id) => {
 }
 export const updateCourseByIdService = async (id, updatedCourseData) => {
     try {
-        console.log('inside update services');
+        // console.log('inside update services');
         
         const { data } = await axiosInstance.put(`/instructor/course/update/${id}`, updatedCourseData)
 
@@ -123,10 +123,10 @@ export async function mediaBulkUploadService(formData) {
     return data
 }
 
-export const fetchStudentCourseListService = async () => {
+export const fetchStudentCourseListService = async (query) => {
     try {
  
-        const { data } = await axiosInstance.get('/student/course/get')
+        const { data } = await axiosInstance.get(`/student/course/get?${query}`)
 
         if(!data?.success) {
             throw new Error('unable to fetch student course list in services')
