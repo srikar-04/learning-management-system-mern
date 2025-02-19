@@ -142,8 +142,10 @@ export const fetchStudentCourseListService = async (query) => {
 
 export const fetchStudentCourseDetailsService = async (id) => {
     try {
+        
         const { data } = await axiosInstance.get(`/student/course/get/details/${id}`)
-
+        // console.log(data, 'response in services');
+        
         if(!data?.success) {
             throw new Error('unable to fetch student course details in services')
         }

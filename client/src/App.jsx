@@ -10,6 +10,7 @@ import StudentHome from './pages/student/StudentHome'
 import NotFoundPage from './pages/not-found/NotFoundPage'
 import AddNewCoursePage from './pages/instructor/AddNewCoursePage'
 import StudentCoursesPage from './pages/student/StudentCoursesPage'
+import StudentCourseDetailsPage from './pages/student/StudentCourseDetailsPage'
 
 function App() {
 
@@ -78,6 +79,7 @@ function App() {
           <Route path='home' element={<StudentHome />} />
           <Route path='' element={<StudentHome />} />
           <Route path='courses' element={<StudentCoursesPage />} />
+          <Route path='course/details/:id' element={<StudentCourseDetailsPage />} />
        </Route>
 
         <Route path='*' element={<NotFoundPage />} />

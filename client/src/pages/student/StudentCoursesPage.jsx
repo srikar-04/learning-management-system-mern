@@ -15,7 +15,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { fetchStudentCourseListService } from "@/services/services.js";
 import { studentContext } from "@/context/student-context/studentContext.jsx";
 import { Card, CardContent, CardTitle } from "@/components/ui/card.jsx";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton.jsx";
 import ClipLoader from "react-spinners/ClipLoader";
 
@@ -29,6 +29,7 @@ function StudentCoursesPage() {
     margin: "0 auto",
     borderColor: "red",
   };
+  const navigate = useNavigate()
 
   const { studentCourseList, setStudentCourseList } =
     useContext(studentContext);
@@ -96,10 +97,10 @@ function StudentCoursesPage() {
     const initializeFilterState =
       storedFilter && storedFilter !== "null" ? JSON.parse(storedFilter) : {};
 
-    console.log(
-      initializeFilterState,
-      "value to be stored in state, currently in useEffect"
-    );
+    // console.log(
+    //   initializeFilterState,
+    //   "value to be stored in state, currently in useEffect"
+    // );
 
     setFilter(() => initializeFilterState);
     setLoading(false);
@@ -139,7 +140,7 @@ function StudentCoursesPage() {
     sessionStorage.setItem("filters", JSON.stringify(copiedFilter));
   };
 
-  console.log(filter, "filter state");
+  // console.log(filter, "filter state");
 
   return (
     <div className="container mx-6 p-4">
@@ -206,7 +207,7 @@ function StudentCoursesPage() {
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
             </DropdownMenu>
-            <span className="text-sm text-gray-800 font-bold">10 Results</span>
+            <span className="text-sm text-gray-800 font-bold">{studentCourseList.length} Results</span>
           </div>
 
           <div className="space-y-4">
@@ -221,7 +222,7 @@ function StudentCoursesPage() {
              />
             ) : studentCourseList && studentCourseList.length > 0 ? (
               studentCourseList.map((courseItem) => (
-                <Card className="cursor-pointer" key={courseItem?._id}>
+                <Card onClick = {() => navigate(`/course/details/${courseItem?._id}`)} className="cursor-pointer" key={courseItem?._id}>
                   <CardContent className="flex gap-4 p-4">
                     <div className="w-48 h-32 flex-shrink-0">
                       <img
