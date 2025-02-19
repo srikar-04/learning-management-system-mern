@@ -75,14 +75,41 @@ function StudentCoursesPage() {
   }, [filter])
   
   useEffect( () => {
-    if(filter !== null && sort !== null) {
+    if(filter && filter !== null && sort && sort !== null) {
       fetchAllStudentCouses(filter, sort)
     }
   }, [filter, sort])
 
-  const handleFilterOnChange = (item, option) => {
-    let copiedFilter = {...filter};
+  useEffect( () => {
+    setSort('price-lowtohigh')
+    
+    console.log(sort, 'sort state in useEffect');
+    
+    const storedFilter = sessionStorage.getItem('filters')
+
+    const initializeFilterState = storedFilter && storedFilter !== "null" ? JSON.parse(storedFilter) : {}
+
+    console.log(initializeFilterState, 'value to be stored in state, currently in useEffect');
+
+    setFilter(initializeFilterState)
+  }, [])
+
+  useEffect( () => {
+    return () => {
+      sessionStorage.removeItem('filters')
+    }
+  }, [])
+
   
+  
+  const handleFilterOnChange = (item, option) => {
+    let copiedFilter = {};
+    if(filter !== null) {
+      copiedFilter = {...filter}
+    } else {
+      copiedFilter[item] = [option.id]
+    }
+    
     if (!copiedFilter[item]) {
       copiedFilter[item] = [option.id]
     } else {
@@ -102,11 +129,9 @@ function StudentCoursesPage() {
     setFilter(copiedFilter);
     sessionStorage.setItem('filters', JSON.stringify(copiedFilter))
   }
-
-  // console.log(studentCourseList, 'final courselist in main page');
-  // console.log(searchParams.toString(), 'searchParams in main page');
-  // console.log(filter, 'filter in main page');
-
+  
+  console.log(filter, 'filter state');
+  
   return (
     <div className="container mx-6 p-4">
       <h1 className="text-3xl font-bold mb-4">All Courses</h1>
