@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import VideoPlayer from "@/components/video-player/VideoPlayer";
 import { studentContext } from "@/context/student-context/studentContext";
 import { fetchStudentCourseDetailsService } from "@/services/services";
 import { AnimatePresence, motion } from "framer-motion";
@@ -6,6 +7,8 @@ import { CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
+import UseAnimations from "react-useanimations";
+import alertTriangle from 'react-useanimations/lib/alertTriangle'
 
 function StudentCourseDetailsPage() {
   const {
@@ -52,6 +55,14 @@ function StudentCourseDetailsPage() {
   useEffect(() => {
     fetchCurrentCourseDetails();
   }, [currentCourseId]);
+
+  const getIndexOfFreePreview = currentCourseDetails !== null 
+  ? currentCourseDetails?.curriculum?.findIndex(item => item.freePreview) : -1
+
+
+  console.log(getIndexOfFreePreview, 'free preview index');
+  // console.log(currentCourseDetails?.curriculum[getIndexOfFreePreview], 'free preview index course');
+  
 
   console.log(currentCourseDetails, "current course details");
 
@@ -129,7 +140,7 @@ function StudentCourseDetailsPage() {
               <CardContent>
                 {
                   currentCourseDetails?.curriculum?.map((curriculumItem, index) => (
-                    <li className={`${curriculumItem?.freePreview ? 'cursor-pointer' : 'cursor-not-allowed'} flex items-center mb-4`}>
+                    <li key={index} className={`${curriculumItem?.freePreview ? 'cursor-pointer' : 'cursor-not-allowed'} flex items-center mb-4`}>
                       {
                         curriculumItem?.freePreview 
                         ? <PlayCircle className="mr-2 h-4 w-4"/> 
@@ -141,8 +152,34 @@ function StudentCourseDetailsPage() {
                 }
               </CardContent>
             </Card>
-
           </main>
+
+          <aside className="w-full md:w-[500px]">
+              <Card className='sticky top-4'>
+                <CardContent className="p-6">
+                  <div className="aspect-video mb-4 rounded-lg flex items-center justify-center">
+                    {
+                      getIndexOfFreePreview !== -1
+                      ? (
+                        <VideoPlayer 
+                        url={
+                          currentCourseDetails?.curriculum[getIndexOfFreePreview].videoUrl 
+                        }
+                      />
+                      )
+                      : (
+                        <div className="w-full h-full flex items-center justify-center text-black">
+                          <span>No Free Preview Found</span>
+                          <UseAnimations animation={alertTriangle} size={56} />
+                        </div>
+                      )
+                    }
+                   
+                  </div>
+                </CardContent>
+              </Card>
+          </aside>
+
         </div>
       </motion.div>
     </AnimatePresence>
