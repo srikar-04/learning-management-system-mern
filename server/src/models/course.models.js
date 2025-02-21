@@ -2,7 +2,7 @@ import mongoose, {Schema} from "mongoose";
 
 const lectureSchema = new Schema({
     title: String,
-    freePreview: String,
+    freePreview: Boolean,
     videoUrl: String,
     public_id: String
 })
