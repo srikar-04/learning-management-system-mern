@@ -1,14 +1,23 @@
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import VideoPlayer from "@/components/video-player/VideoPlayer";
 import { studentContext } from "@/context/student-context/studentContext";
 import { fetchStudentCourseDetailsService } from "@/services/services";
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
+import {
+  BaggageClaim,
+  CheckCircle,
+  Globe,
+  Lock,
+  PlayCircle,
+} from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import UseAnimations from "react-useanimations";
-import alertTriangle from 'react-useanimations/lib/alertTriangle'
+import alertTriangle from "react-useanimations/lib/alertTriangle";
+import airplay from "react-useanimations/lib/airplay";
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 function StudentCourseDetailsPage() {
   const {
@@ -19,12 +28,20 @@ function StudentCourseDetailsPage() {
   } = useContext(studentContext);
 
   const [loading, setLoading] = useState(true);
+  const [showFreePreviewDialog, setShowFreePreviewDialog] = useState(false)
+  const [freePreviewVideoUrl, setFreePreviewVideoUrl] = useState([])
 
   const { id } = useParams();
+  const location = useLocation();
 
   useEffect(() => {
-    // console.log('updating id state');
+    if (location.pathname.includes("course/details")) {
+      setCurrentCourseDetails(() => null);
+      setCurrentCouseId(() => null);
+    }
+  }, []);
 
+  useEffect(() => {
     if (id) {
       setCurrentCouseId(() => id);
     }
@@ -56,13 +73,45 @@ function StudentCourseDetailsPage() {
     fetchCurrentCourseDetails();
   }, [currentCourseId]);
 
-  const getIndexOfFreePreview = currentCourseDetails !== null 
-  ? currentCourseDetails?.curriculum?.findIndex(item => item.freePreview) : -1
+  const handleFreePreviewDialog = (index) => {
 
+    const curriculumItem = currentCourseDetails?.curriculum[index]
 
-  console.log(getIndexOfFreePreview, 'free preview index');
-  // console.log(currentCourseDetails?.curriculum[getIndexOfFreePreview], 'free preview index course');
+    if(!curriculumItem) {
+      console.error('curriculum Item not found')
+      return
+    }
+
+    if(!curriculumItem?.freePreview) {
+      return
+    }
+
+    if(!curriculumItem?.videoUrl) {
+      return
+    }
+
+    setFreePreviewVideoUrl( prev => 
+      prev.includes(curriculumItem?.videoUrl) ? prev : [...prev, curriculumItem?.videoUrl]
+    )
+  }
+
+  useEffect( () => {
+    if(freePreviewVideoUrl && freePreviewVideoUrl.length > 0) {
+      setShowFreePreviewDialog(true)
+    }
+  }, [freePreviewVideoUrl])
+
+  console.log(freePreviewVideoUrl, 'video url for free preview');
+  console.log(showFreePreviewDialog, 'show dialog state');
   
+
+  const getIndexOfFreePreview =
+    currentCourseDetails !== null
+      ? currentCourseDetails?.curriculum?.findIndex((item) => item.freePreview)
+      : -1;
+
+  // console.log(getIndexOfFreePreview, "free preview index");
+  // console.log(currentCourseDetails?.curriculum[getIndexOfFreePreview], 'free preview index course');
 
   console.log(currentCourseDetails, "current course details");
 
@@ -75,13 +124,13 @@ function StudentCourseDetailsPage() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0.7, transition: { duration: 0.5 } }}
         >
-           <ClipLoader
+          <ClipLoader
             color="#000000"
             loading={loading}
             size={50}
             speedMultiplier={4}
             data-testid="loader"
-        />
+          />
         </motion.div>
       </AnimatePresence>
     );
@@ -121,41 +170,67 @@ function StudentCourseDetailsPage() {
               </CardHeader>
               <CardContent>
                 <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                  {
-                    currentCourseDetails?.objectives.split(',').map((objective, index) => (
+                  {currentCourseDetails?.objectives
+                    .split(",")
+                    .map((objective, index) => (
                       <li className="flex items-start" key={index}>
                         <CheckCircle className="mr-2 h-5 w-5 text-green-500 shrink-0" />
                         <span>{objective}</span>
                       </li>
-                    ))
-                  }
+                    ))}
                 </ul>
               </CardContent>
             </Card>
 
-            <Card className='my-8'>
+            <Card className="my-8">
               <CardHeader>
                 <CardTitle>Course Curriculum</CardTitle>
               </CardHeader>
               <CardContent>
-                {
-                  currentCourseDetails?.curriculum?.map((curriculumItem, index) => (
-                    <li key={index} className={`${curriculumItem?.freePreview ? 'cursor-pointer' : 'cursor-not-allowed'} flex items-center mb-4`}>
-                      {
-                        curriculumItem?.freePreview 
-                        ? <PlayCircle className="mr-2 h-4 w-4"/> 
-                        : <Lock className="mr-2 h-4 w-4" />
-                      }
-                      <span>{curriculumItem?.title}</span>
+                {currentCourseDetails?.curriculum?.map(
+                  (curriculumItem, index) => (
+                    <li
+                      key={index}
+                      className={`flex items-center mb-4`}
+                      onClick={() => handleFreePreviewDialog(index)}
+                    >
+                      {curriculumItem?.freePreview ? (
+                        <PlayCircle className="mr-2 h-4 w-4 cursor-pointer" />
+                      ) : (
+                        <Lock className="mr-2 h-4 w-4 cursor-not-allowed" />
+                      )}
+                      <span className={`${curriculumItem?.freePreview ? 'cursor-pointer' : 'cursor-not-allowed'}`}>{curriculumItem?.title}</span>
                     </li>
-                  ))
+                  )
+                )}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Course Description</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {
+                  currentCourseDetails?.
+                  description                  
                 }
               </CardContent>
             </Card>
           </main>
 
-          <aside className="w-full md:w-[500px]">
+          <aside className="w-full md:w-[500px] flex-shrink-0">
               <Card className='sticky top-4'>
+                <CardHeader>
+                <CardTitle className="flex gap-2 items-center">
+                  <span>
+                    <UseAnimations animation={airplay} size={36} />
+                  </span>
+                  <span>
+                    Free Preview
+                  </span>
+                </CardTitle>
+                </CardHeader>
                 <CardContent className="p-6">
                   <div className="aspect-video mb-4 rounded-lg flex items-center justify-center">
                     {
@@ -179,8 +254,48 @@ function StudentCourseDetailsPage() {
                 </CardContent>
               </Card>
           </aside>
-
         </div>
+
+        <Dialog open={showFreePreviewDialog}
+          onOpenChange={() => {
+            setShowFreePreviewDialog(false)
+            setFreePreviewVideoUrl([])
+          }}
+        >
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="flex gap-2 items-center">
+                <span>
+                  <UseAnimations animation={airplay} size={36} />
+                </span>
+                <span>
+                  Free Preview
+                </span>
+              </DialogTitle>
+            </DialogHeader>
+              <div className="aspect-video mb-4 rounded-lg flex items-center justify-center">
+                  {freePreviewVideoUrl && showFreePreviewDialog ?(
+                      <VideoPlayer
+                        url={
+                          freePreviewVideoUrl
+                        }
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-black">
+                        <span>No Free Preview Found</span>
+                        <UseAnimations animation={alertTriangle} size={56} />
+                      </div>
+                    )}
+                </div>
+            <DialogFooter className="sm:justify-start">
+              <DialogClose asChild>
+                <Button type="button" variant="secondary">
+                  Close
+                </Button>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </motion.div>
     </AnimatePresence>
   );
