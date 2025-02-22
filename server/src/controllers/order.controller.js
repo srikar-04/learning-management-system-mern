@@ -127,7 +127,59 @@ const capturePayment = async (req, res) => {
 
     // updating studentCorse model
 
-    
+    const studentCourses = await StudentCourses.findOne({
+        userId: order.userId
+    })
+
+    if(studentCourses) {
+
+        studentCourses.courses.push({
+            courseId: order.courseId,
+            title: order.courseTitle,
+            instructorId: order.instructorId,
+            instructorName: order.instructorName,
+            dateOfPurchase: order.orderDate,
+            courseImage: order.courseImage
+        })
+
+        await studentCourses.save()
+
+        // UPDATING COURSESCHEMA STUDENTS
+
+        await Course.findByIdAndUpdate(order.courseId, {
+            $addToSet: {
+                students: {
+                    studentId : order.userId,
+                    studentName: order.userName,
+                    studentEmail: order.userEmail,
+                    paidAmount: order.coursePricing
+                }
+            }
+        })
+
+        res.status(201).json({
+            success: true,
+            msg: 'order confirmed',
+            data: order
+        })
+
+    } else {
+        const newStudentCourses = new StudentCourses({
+            userId: order.userId,
+            courses : [
+                {
+                    courseId: order.courseId,
+                    title: order.courseTitle,
+                    instructorId: order.instructorId,
+                    instructorName: order.instructorName,
+                    dateOfPurchase: order.orderDate,
+                    courseImage: order.courseImage
+                }
+            ]
+        })
+
+        await newStudentCourses.save()
+    }
 
   } catch (error) {
     console.error(error, "error while capturing payment, in controller");
