@@ -1,4 +1,4 @@
-import paypal from "../utils/paypal";
+import paypal from "../utils/paypal.js";
 import { Order } from "../models/order.models.js";
 import { StudentCourses } from "../models/studentCourses.models.js";
 import { Course } from "../models/course.models.js";
@@ -60,7 +60,8 @@ const createOrder = async (req, res) => {
             console.log(error, 'error in the order controller while doing payment')
             return res.status(500).json({
                 success: false,
-                error: error.message
+                error: error.message,
+                msg: "error in the order controller while doing payment"
             })
         } else {
             //  WE CAN ALSO USE .CREATE METHOD FOR THIS
@@ -100,6 +101,7 @@ const createOrder = async (req, res) => {
     res.status(500).json({
       success: false,
       error: error.message,
+      msg: 'error while creating order, in controller '
     });
   }
 };
@@ -185,6 +187,7 @@ const capturePayment = async (req, res) => {
     res.status(500).json({
       success: false,
       error: error.message,
+      msg: "error while capturing payment, in controller"
     });
   }
 };

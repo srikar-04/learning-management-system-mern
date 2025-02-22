@@ -88,7 +88,7 @@ function AddNewCoursePage() {
     if(reponse?.success) {
       setCourseCurriculumFormData(courseCurriculumInitialFormData)
       setCourseLandingFormData(courseLandingInitialFormData)
-      setCurrentEditCourseId(null)
+      setCurrentEditCourseId(() => null)
       navigate(-1)
     }
     
@@ -110,7 +110,7 @@ function AddNewCoursePage() {
   }
 
   useEffect( () => {
-    if(params?.id) setCurrentEditCourseId(params?.id)
+    if(params?.id) setCurrentEditCourseId(() => params?.id)
   }, [params?.id])
 
   useEffect( () => {

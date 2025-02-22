@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import VideoPlayer from "@/components/video-player/VideoPlayer";
 import { studentContext } from "@/context/student-context/studentContext";
-import { fetchStudentCourseDetailsService } from "@/services/services";
+import { createPaymentService, fetchStudentCourseDetailsService } from "@/services/services";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   BaggageClaim,
@@ -18,6 +18,7 @@ import UseAnimations from "react-useanimations";
 import alertTriangle from "react-useanimations/lib/alertTriangle";
 import airplay from "react-useanimations/lib/airplay";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { AuthContext } from "@/context/auth-context";
 
 function StudentCourseDetailsPage() {
   const {
@@ -33,17 +34,18 @@ function StudentCourseDetailsPage() {
 
   const { id } = useParams();
   const location = useLocation();
+  const [approvalUrl, setApprovalUrl] = useState('')
 
   useEffect(() => {
     if (location.pathname.includes("course/details")) {
-      setCurrentCourseDetails(() => null);
-      setCurrentCouseId(() => null);
+      setCurrentCourseDetails(null);
+      setCurrentCouseId(null);
     }
   }, []);
 
   useEffect(() => {
     if (id) {
-      setCurrentCouseId(() => id);
+      setCurrentCouseId(id);
     }
   }, [id]);
 
@@ -101,21 +103,21 @@ function StudentCourseDetailsPage() {
     }
   }, [freePreviewVideoUrl])
 
-  console.log(freePreviewVideoUrl, 'video url for free preview');
-  console.log(showFreePreviewDialog, 'show dialog state');
+  // console.log(freePreviewVideoUrl, 'video url for free preview');
+  // console.log(showFreePreviewDialog, 'show dialog state');
   
 
   const getIndexOfFreePreview =
     currentCourseDetails !== null
-      ? currentCourseDetails?.curriculum?.findIndex((item) => item.freePreview)
-      : -1;
+    ? currentCourseDetails?.curriculum?.findIndex((item) => item.freePreview)
+    : -1;
 
   // console.log(getIndexOfFreePreview, "free preview index");
   // console.log(currentCourseDetails?.curriculum[getIndexOfFreePreview], 'free preview index course');
 
   console.log(currentCourseDetails, "current course details");
 
-  if (loading)
+  if (loading) {
     return (
       <AnimatePresence mode="wait">
         <motion.div
@@ -133,7 +135,58 @@ function StudentCourseDetailsPage() {
           />
         </motion.div>
       </AnimatePresence>
-    );
+    )
+  }
+
+  const { userId,
+  userName,
+  userEmail,
+  orderStatus,
+  paymentMethod,
+  paymentStatus,
+  orderDate,
+  paymentId,
+  payerId,
+  instructorId,
+  instructorName,
+  courseImage,
+  courseTitle,
+  courseId,
+  coursePricing,} = useContext(studentContext)
+
+  const {auth} = useContext(AuthContext)
+
+  async function handleCreatePayment() {
+    const paymentPayload = {
+      userId: auth?.user?._id,
+      userName:  auth?.user?.userName,
+      userEmail: auth?.user?.userEmail,
+      orderStatus: 'pending',
+      paymentMethod: 'paypal',
+      paymentStatus: 'initiated',
+      orderDate: new Date(),
+      paymentId: "",
+      payerId: "",
+      instructorId: currentCourseDetails?.instructorId,
+      instructorName: currentCourseDetails?.instructorName,
+      courseImage: currentCourseDetails?.image,
+      courseTitle: currentCourseDetails?.title,
+      courseId: currentCourseDetails?._id,
+      coursePricing: currentCourseDetails?.pricing,
+    }
+
+    console.log(paymentPayload, 'paymentPayload'); 
+    const response = await createPaymentService(paymentPayload)
+
+    if(response?.success) {
+      sessionStorage.setItem('currentOrderId', JSON.stringify(response?.data?.orderId))
+      setApprovalUrl(response?.data?.approvedUrl)
+    }
+  }
+
+  if(approvalUrl !== '') {
+    window.location.href = approvalUrl
+  }
 
   return (
     <AnimatePresence mode="wait">
@@ -255,7 +308,10 @@ function StudentCourseDetailsPage() {
                   <div className="flex w-full items-center justify-between">
                     <div className="font-bold text-2xl">${currentCourseDetails?.pricing}</div>                 
                     <div>
-                      <Button className='transition-all hover:shadow-lg hover:scale-110 hover:duration-500 hover:bg-gray-800 hover:text-white'>
+                      <Button 
+                        className='transition-all hover:shadow-lg hover:scale-110 hover:duration-500 hover:bg-gray-800 hover:text-white'
+                        onClick={handleCreatePayment}
+                      >
                         <span>
                           <BaggageClaim size={44} strokeWidth={2} />
                         </span>
@@ -275,7 +331,7 @@ function StudentCourseDetailsPage() {
             setFreePreviewVideoUrl([])
           }}
         >
-          <DialogContent className="sm:max-w-md">
+          <DialogContent>
             <DialogHeader>
               <DialogTitle className="flex gap-2 items-center">
                 <span>

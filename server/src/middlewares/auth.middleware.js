@@ -15,7 +15,7 @@ const verifyToken =  (token, jwtSecret) => {
         // console.log(error, 'error in auth middleware');
         // throw new Error(error)
     }
-    console.log(res, 'response in verify token');
+    // console.log(res, 'response in verify token');
     
     return res
 }
@@ -52,7 +52,7 @@ const authMiddleware = async (req, res, next) => {
     
     const payload = verifyToken(token, process.env.JWT_SECRET)
 
-    console.log(payload, 'payload after token verification');
+    // console.log(payload, 'payload after token verification');
     
 
     req.user = payload

@@ -7,6 +7,7 @@ import authRoutes from './routes/auth.routes.js'
 import mediaRoutes from './routes/media.routes.js'
 import instructorCourseRoutes from './routes/course.routes.js'
 import studentCourseRoutes from './routes/studentCourse.routes.js'
+import orderRoutes from './routes/order.routes.js'
 
 
 const app = express();
@@ -35,6 +36,7 @@ app.use('/auth', authRoutes)
 app.use('/media', mediaRoutes)
 app.use('/instructor/course', instructorCourseRoutes)
 app.use('/student/course', studentCourseRoutes)
+app.use('/student/order', orderRoutes)
 
 // DB Connection
 const PORT = process.env.PORT || 5000

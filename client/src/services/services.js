@@ -157,3 +157,14 @@ export const fetchStudentCourseDetailsService = async (id) => {
     }
 }
 
+export const createPaymentService = async (formData) => {
+    const {data} = await axiosInstance.post(`student/order/create`, formData)
+
+    return data
+}
+export const capturePaymentService = async (formData) => {
+    const {data} = await axiosInstance.post(`student/order/capture`, formData)
+
+    return data
+}
+

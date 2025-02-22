@@ -15,7 +15,7 @@ const OrderSchema = new Schema({
     courseImage: String,
     courseTitle: String,
     courseId: String,
-    coursePricing: Number
+    coursePricing: String
 }, {timestamps: true})
 
 export const Order = mongoose.model('Order', OrderSchema)
