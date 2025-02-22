@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import VideoPlayer from "@/components/video-player/VideoPlayer";
 import { studentContext } from "@/context/student-context/studentContext";
 import { fetchStudentCourseDetailsService } from "@/services/services";
@@ -231,7 +231,7 @@ function StudentCourseDetailsPage() {
                   </span>
                 </CardTitle>
                 </CardHeader>
-                <CardContent className="p-6">
+                <CardContent className="">
                   <div className="aspect-video mb-4 rounded-lg flex items-center justify-center">
                     {
                       getIndexOfFreePreview !== -1
@@ -249,9 +249,22 @@ function StudentCourseDetailsPage() {
                         </div>
                       )
                     }
-                   
                   </div>
                 </CardContent>
+                <CardFooter>
+                  <div className="flex w-full items-center justify-between">
+                    <div className="font-bold text-2xl">${currentCourseDetails?.pricing}</div>                 
+                    <div>
+                      <Button className='transition-all hover:shadow-lg hover:scale-110 hover:duration-500 hover:bg-gray-800 hover:text-white'>
+                        <span>
+                          <BaggageClaim size={44} strokeWidth={2} />
+                        </span>
+                        Buy Now
+                      </Button>
+                    </div>
+
+                  </div>
+                </CardFooter>
               </Card>
           </aside>
         </div>
