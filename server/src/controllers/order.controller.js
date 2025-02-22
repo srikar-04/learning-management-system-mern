@@ -1,8 +1,7 @@
 import paypal from "../utils/paypal";
-import { Order } from "../models/order.models";
-import { StudentCourses } from "../models/studentCourses.models";
-import { Course } from "../models/course.models";
-import { payment } from "paypal-rest-sdk";
+import { Order } from "../models/order.models.js";
+import { StudentCourses } from "../models/studentCourses.models.js";
+import { Course } from "../models/course.models.js";
 
 const createOrder = async (req, res) => {
   try {
