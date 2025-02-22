@@ -11,7 +11,7 @@ const OrderSchema = new Schema({
     paymentId: String,
     payerId: String,
     instructorId: String,
-    instrucorName: String,
+    instructorName: String,
     courseImage: String,
     courseTitle: String,
     courseId: String,
