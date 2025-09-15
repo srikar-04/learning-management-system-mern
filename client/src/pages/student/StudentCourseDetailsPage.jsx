@@ -23,7 +23,7 @@ import { AuthContext } from "@/context/auth-context";
 function StudentCourseDetailsPage() {
   const {
     currentCourseId,
-    setCurrentCouseId,
+    setCurrentCourseId,
     currentCourseDetails,
     setCurrentCourseDetails,
   } = useContext(studentContext);
@@ -36,22 +36,44 @@ function StudentCourseDetailsPage() {
   const location = useLocation();
   const [approvalUrl, setApprovalUrl] = useState('')
 
-  useEffect(() => {
-    if (location.pathname.includes("course/details")) {
-      setCurrentCourseDetails(null);
-      setCurrentCouseId(null);
-    }
-  }, []);
+  function isValidMongoId(id) {
+    return typeof id === "string" && /^[a-f\d]{24}$/i.test(id);
+  }
+
+  // useEffect(() => {
+  //   if (location.pathname.includes("courses")) {
+  //     setCurrentCourseDetails(null);
+  //     setCurrentCourseId('');
+  //   }
+  // }, []);
 
   useEffect(() => {
-    if (id) {
-      setCurrentCouseId(id);
-    }
-  }, [id]);
+  if (id && isValidMongoId(id)) {
+    setCurrentCourseId(id);
+  } else {
+    console.warn("id is not valid ObjectId");
+    setCurrentCourseId(null); // or skip fetching
+  }
+}, [id]);
+
 
   const fetchCurrentCourseDetails = async () => {
     // console.log('fetching data using id');
     try {
+
+      
+      if (!currentCourseId ) {
+        console.error('cannot find course id, cannot fetch course details');
+        setLoading(false);
+        return;
+      }
+
+      if(!isValidMongoId(currentCourseId)) {
+        console.error('invalid course id, cannot fetch course details');
+        setLoading(false);
+        return;
+      }
+
       const response = await fetchStudentCourseDetailsService(currentCourseId);
 
       // console.log(response, 'reponse in useEffect');
@@ -157,6 +179,8 @@ function StudentCourseDetailsPage() {
   const {auth} = useContext(AuthContext)
 
   async function handleCreatePayment() {
+    console.log(currentCourseDetails?._id, 'current course id before creating payment');
+    
     const paymentPayload = {
       userId: auth?.user?._id,
       userName:  auth?.user?.userName,
@@ -177,6 +201,8 @@ function StudentCourseDetailsPage() {
 
     console.log(paymentPayload, 'paymentPayload'); 
     const response = await createPaymentService(paymentPayload)
+    console.log(response, 'response after creating payment');
+    
 
     if(response?.success) {
       sessionStorage.setItem('currentOrderId', JSON.stringify(response?.data?.orderId))

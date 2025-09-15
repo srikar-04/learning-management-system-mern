@@ -5,7 +5,7 @@ export const studentContext = createContext(null);
 
 export default function StudentProvider({children}) {
     const [studentCourseList, setStudentCourseList] = useState([])
-    const [currentCourseId, setCurrentCouseId] = useState(null)
+    const [currentCourseId, setCurrentCourseId] = useState('')
     const [currentCourseDetails, setCurrentCourseDetails] = useState(null)
 
     return (
@@ -14,7 +14,7 @@ export default function StudentProvider({children}) {
                 studentCourseList,
                 setStudentCourseList,
                 currentCourseId, 
-                setCurrentCouseId,
+                setCurrentCourseId,
                 currentCourseDetails, 
                 setCurrentCourseDetails
             }}

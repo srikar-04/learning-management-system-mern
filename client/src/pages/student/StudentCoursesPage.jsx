@@ -239,8 +239,10 @@ function StudentCoursesPage() {
             <div className="space-y-4">
               { 
                 studentCourseList && studentCourseList.length > 0 ? (
-                studentCourseList.map((courseItem) => (
-                  <Card onClick = {() => navigate(`/course/details/${courseItem?._id}`)} className="cursor-pointer" key={courseItem?._id}>
+                studentCourseList
+                .filter(courseItem => courseItem && courseItem._id)
+                .map((courseItem) => (
+                  <Card onClick={() => navigate(`/course/details/${courseItem._id}`)} className="cursor-pointer" key={courseItem._id}>
                     <CardContent className="flex gap-4 p-4">
                       <div className="w-48 h-32 flex-shrink-0">
                         <img

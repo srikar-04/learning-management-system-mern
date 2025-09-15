@@ -1,3 +1,4 @@
+import { isValidObjectId, Types } from "mongoose";
 import { Course } from "../models/course.models.js";
 
 const getAllStudentCourses = async (req, res) => {
@@ -65,27 +66,38 @@ const getStudentCourseDetails = async(req, res) => {
     try {
 
         const {id} = req.params
+
+        console.log(id, 'id from params');
         
+
+        if(!isValidObjectId(id)) {
+            return res.status(400).json({
+              success: false,
+              msg: 'invalid course id format',
+            })
+        }
+
+
         const courseDetails = await Course.findById(id)
 
         if(!courseDetails) {
-            res.status(404).json({
-                success: false,
-                msg: 'no course found with that id, in controller'
+            return res.status(404).json({
+              success: false,
+              msg: 'no course found with that id, in controller'
             })
         }
 
         res.status(201).json({
-            success: true,
-            data: courseDetails
+          success: true,
+          data: courseDetails
         })
         
     } catch (error) {
         console.error('error while fetching student courses details : ', error);
         res.status(500).json({
-            success: false,
-            msg: 'error while fetching student courses details in controller',
-            error: error.message
+          success: false,
+          msg: 'error while fetching student courses details in controller',
+          error: error.message
         })
     }
 }

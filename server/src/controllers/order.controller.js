@@ -24,14 +24,33 @@ const createOrder = async (req, res) => {
       coursePricing,
     } = req.body;
 
+    const newlyCreatedCourseOrder = new Order({
+      userId,
+      userName,
+      userEmail,
+      orderStatus,
+      paymentMethod,
+      paymentStatus,
+      orderDate,
+      paymentId,
+      payerId,
+      instructorId,
+      instructorName,
+      courseImage,
+      courseTitle,
+      courseId,
+      coursePricing,
+    });
+    await newlyCreatedCourseOrder.save();
+
     const create_payment_json = {
         intent: 'sale',
         payer: {
             payment_method: 'paypal'
         },
         redirect_urls: {
-            return_url: 'http://localhost:5173/payment-return',
-            cancel_url: 'http://localhost:5173/payment-cancel'
+            return_url: `http://localhost:5173/payment-return?courseId=${courseId}&orderId=${newlyCreatedCourseOrder._id}`,
+            cancel_url: `http://localhost:5173/payment-cancel?orderId=${newlyCreatedCourseOrder._id}`
         },
         transactions: [
             {
@@ -58,41 +77,33 @@ const createOrder = async (req, res) => {
     paypal.payment.create(create_payment_json, async(error, paymentInfo) => {
         if(error) {
             console.log(error, 'error in the order controller while doing payment')
+            newlyCreatedCourseOrder.orderStatus = "failed";
+            newlyCreatedCourseOrder.paymentStatus = "failed";
+            await newlyCreatedCourseOrder.save();
+
             return res.status(500).json({
                 success: false,
                 error: error.message,
                 msg: "error in the order controller while doing payment"
             })
         } else {
-            //  WE CAN ALSO USE .CREATE METHOD FOR THIS
-            const newlyCreatedCourseOrder = new Order({
-                userId,
-                userName,
-                userEmail,
-                orderStatus,
-                paymentMethod,
-                paymentStatus,
-                orderDate,
-                paymentId,
-                payerId,
-                instructorId,
-                instructorName,
-                courseImage,
-                courseTitle,
-                courseId,
-                coursePricing,
-            })
-            await newlyCreatedCourseOrder.save()
 
-            const approvedUrl = paymentInfo.links.find(link => link.rel == 'approval_url').href
+            // const approvedUrl = paymentInfo.links.find(link => link.rel == 'approval_url').href
+
+            // res.status(201).json({
+            //     success: true,
+            //     data:  JSON.stringify(paymentInfo)
+            // })
+
+            const approvalUrl = paymentInfo.links.find(link => link.rel === 'approval_url').href;
 
             res.status(201).json({
                 success: true,
                 data: {
-                    approvedUrl,
-                    orderId: newlyCreatedCourseOrder._id
+                    orderId: newlyCreatedCourseOrder?._id,
+                    approvedUrl: approvalUrl
                 }
-            })
+            });
         }
     })
 
@@ -105,6 +116,7 @@ const createOrder = async (req, res) => {
     });
   }
 };
+
 const capturePayment = async (req, res) => {
   try {
 

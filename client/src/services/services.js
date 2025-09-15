@@ -158,7 +158,12 @@ export const fetchStudentCourseDetailsService = async (id) => {
 }
 
 export const createPaymentService = async (formData) => {
+    console.log('inside the create payment services');
+    
     const {data} = await axiosInstance.post(`student/order/create`, formData)
+
+    console.log(data, 'data after creating payment in services');
+    
 
     return data
 }
