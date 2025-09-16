@@ -6,7 +6,7 @@ const StudentCourseSchema = new Schema({
         courseId: String,
         title: String,
         instructorId: String,
-        instrucorName: String,
+        instructorName: String,
         dateOfPurchase: Date,
         courseImage: String
     }]

@@ -150,6 +150,9 @@ const capturePayment = async (req, res) => {
         // what if he already has the course
         const alreadyHasCourse = studentCourses.courses.find(course => course.courseId?.toString() === order.courseId?.toString())
 
+        console.log(order.instructorName, 'instructor of the course');
+        
+
         if(!alreadyHasCourse) {
             studentCourses.courses.push({
                 courseId: order.courseId,
