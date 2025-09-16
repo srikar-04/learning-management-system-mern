@@ -71,10 +71,6 @@ function App() {
           }
         />
 
-        <Route path="/payment-return" element={<PaymentReturnPage />} />
-        <Route path="/payment-cancel" element={<PaymentCancelPage />} />
-        <Route path="/my-courses" element={<MyCourses />} />
-        <Route path="/course-progress" element={<CourseProgressPage />} />
         {/* <Route path="/course-progress/:currentCourseId" element={<CourseProgressPage />} /> */}
 
        <Route path='/'
@@ -90,6 +86,10 @@ function App() {
           <Route path='' element={<StudentHome />} />
           <Route path='courses' element={<StudentCoursesPage />} />
           <Route path='course/details/:id' element={<StudentCourseDetailsPage />} />
+          <Route path="/payment-return" element={<PaymentReturnPage />} />
+          <Route path="/payment-cancel" element={<PaymentCancelPage />} />
+          <Route path="/my-courses" element={<MyCourses />} />
+          <Route path="/course-progress/:currentCourseId" element={<CourseProgressPage />} />
        </Route>
 
         <Route path='*' element={<NotFoundPage />} />

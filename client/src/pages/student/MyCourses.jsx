@@ -50,6 +50,8 @@ function MyCourses() {
                         <CardFooter>
                             <Button  className="flex-1" >  
                                 {/* onClick={() => navigate(`/course-progress/${course._id}`, {replace: true})} */}
+                                {/* {onClick=() => navigate(`/course-progress/${course.courseId}`, {replace: true})} */}
+                                {onclick = () => navigate(`/course-progress/${course.courseId}`)}
                                 <Watch className='mr-2 h-4 w-4'/>
                                 Start Watching
                             </Button>
