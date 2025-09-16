@@ -39,7 +39,7 @@ app.use('/instructor/course', instructorCourseRoutes)
 app.use('/student/course', studentCourseRoutes)
 app.use('/student/order', orderRoutes)
 app.use('/student/bought', myCoursesRotes)
-// /student/course/get/details/67af45e6eefa4c82c0f901ae
+// /student/course/get/details/67b1d372436398c9336e1b69
 
 // DB Connection
 const PORT = process.env.PORT || 5000
