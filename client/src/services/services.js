@@ -140,10 +140,10 @@ export const fetchStudentCourseListService = async (query) => {
     }
 }
 
-export const fetchStudentCourseDetailsService = async (id) => {
+export const fetchStudentCourseDetailsService = async (id, studentId) => {
     try {
-        
-        const { data } = await axiosInstance.get(`/student/course/get/details/${id}`)
+
+        const { data } = await axiosInstance.get(`/student/course/get/details/${id}/${studentId}`)
         // console.log(data, 'response in services');
         
         if(!data?.success) {

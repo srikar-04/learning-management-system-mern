@@ -6,11 +6,13 @@ import React, { useContext, useEffect } from 'react'
 import { CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Watch } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 function MyCourses() {
 
     const {auth} = useContext(AuthContext)
     const {myCoursesList, setMyCoursesList} = useContext(studentContext)
+    const navigate = useNavigate()
 
     async function fetchMyCourses() {
         const response = await fetchMyCoursesService(auth?.user?._id)
@@ -46,7 +48,8 @@ function MyCourses() {
                             <p className='text-sm text-gray-700'>{course.instructorName}</p>
                         </CardContent>
                         <CardFooter>
-                            <Button className="flex-1">
+                            <Button  className="flex-1" >  
+                                {/* onClick={() => navigate(`/course-progress/${course._id}`, {replace: true})} */}
                                 <Watch className='mr-2 h-4 w-4'/>
                                 Start Watching
                             </Button>

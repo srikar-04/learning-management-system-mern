@@ -75,6 +75,7 @@ function App() {
         <Route path="/payment-cancel" element={<PaymentCancelPage />} />
         <Route path="/my-courses" element={<MyCourses />} />
         <Route path="/course-progress" element={<CourseProgressPage />} />
+        {/* <Route path="/course-progress/:currentCourseId" element={<CourseProgressPage />} /> */}
 
        <Route path='/'
         element={

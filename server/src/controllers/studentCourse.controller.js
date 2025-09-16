@@ -1,5 +1,6 @@
 import { isValidObjectId, Types } from "mongoose";
 import { Course } from "../models/course.models.js";
+import { StudentCourses } from "../models/studentCourses.models.js";
 
 const getAllStudentCourses = async (req, res) => {
     try {
@@ -65,10 +66,10 @@ const getAllStudentCourses = async (req, res) => {
 const getStudentCourseDetails = async(req, res) => {
     try {
 
-        const {id} = req.params
+        const {id, studentId} = req.params
 
         console.log(id, 'id from params');
-        
+        console.log(studentId, 'studentId from params');
 
         if(!isValidObjectId(id)) {
             return res.status(400).json({
@@ -87,9 +88,22 @@ const getStudentCourseDetails = async(req, res) => {
             })
         }
 
-        res.status(201).json({
+        // fetch purchased courses by the student
+        const purchasedCourses = await StudentCourses.findOne({
+          userId: studentId
+        })
+
+        // console.log(purchasedCourses, 'purchasedCourses from studentCourses collection');
+
+        const isCoursePurchased = purchasedCourses?.courses.some( course => course.courseId?.toString() === id)
+
+        // console.log(isCoursePurchased, 'isCoursePurchased');
+        
+
+        res.status(200).json({
           success: true,
-          data: courseDetails
+          data: courseDetails,
+          isCoursePurchased
         })
         
     } catch (error) {
