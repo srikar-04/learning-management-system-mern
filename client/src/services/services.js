@@ -173,3 +173,8 @@ export const capturePaymentService = async (formData) => {
     return data
 }
 
+export const fetchMyCoursesService = async (studentId) => {
+    const { data } = await axiosInstance.get(`/student/bought/my-courses/${studentId}`)
+    return data
+}
+
