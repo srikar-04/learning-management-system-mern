@@ -53,10 +53,8 @@ function StudentHome() {
         <h2 className='text-2xl font-bold mb-6'>Course Categories</h2>
         <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4'>
           {
-            courseCategories.map( item => (
-              <>
-                <Button key={item.id} className='justify-start' variant='outline'>{item.label}</Button>
-              </>
+            courseCategories.map( (item) => (
+              <Button key={item.id} className='justify-start' variant='outline'>{item.label}</Button>
             ))
           }
         </div>
