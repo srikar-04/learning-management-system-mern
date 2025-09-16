@@ -120,6 +120,7 @@ const createOrder = async (req, res) => {
 const capturePayment = async (req, res) => {
   try {
 
+    // paymentId, payerId, orderId, courseId
     const {paymentId, payerId, orderId} = req.body;
 
     let order = await Order.findById(orderId)
@@ -146,30 +147,42 @@ const capturePayment = async (req, res) => {
 
     if(studentCourses) {
 
-        studentCourses.courses.push({
-            courseId: order.courseId,
-            title: order.courseTitle,
-            instructorId: order.instructorId,
-            instructorName: order.instructorName,
-            dateOfPurchase: order.orderDate,
-            courseImage: order.courseImage
-        })
+        // what if he already has the course
+        const alreadyHasCourse = studentCourses.courses.find(course => course.courseId?.toString() === order.courseId?.toString())
+
+        if(!alreadyHasCourse) {
+            studentCourses.courses.push({
+                courseId: order.courseId,
+                title: order.courseTitle,
+                instructorId: order.instructorId,
+                instructorName: order.instructorName,
+                dateOfPurchase: order.orderDate,
+                courseImage: order.courseImage
+            })
+        }
 
         await studentCourses.save()
 
+        console.log('STUDENT COURSES UPDATED');
+        
+
         // UPDATING COURSESCHEMA STUDENTS
 
-        await Course.findByIdAndUpdate(order.courseId, {
-            $addToSet: {
-                students: {
-                    studentId : order.userId,
-                    studentName: order.userName,
-                    studentEmail: order.userEmail,
-                    paidAmount: order.coursePricing
+        if(!alreadyHasCourse) {
+            await Course.findByIdAndUpdate(order.courseId, {
+                $addToSet: {
+                    students: {
+                        studentId : order.userId,
+                        studentName: order.userName,
+                        studentEmail: order.userEmail,
+                        paidAmount: order.coursePricing
+                    }
                 }
-            }
-        })
+            })
+        }
 
+        console.log('COURSE STUDENTS UPDATED');
+        
         res.status(201).json({
             success: true,
             msg: 'order confirmed',
@@ -192,6 +205,23 @@ const capturePayment = async (req, res) => {
         })
 
         await newStudentCourses.save()
+
+        await Course.findByIdAndUpdate(order.courseId, {
+            $addToSet: {
+                students: {
+                    studentId : order.userId,
+                    studentName: order.userName,
+                    studentEmail: order.userEmail,
+                    paidAmount: order.coursePricing
+                }
+            }
+        })
+
+        res.status(201).json({
+            success: true,
+            msg: 'order confirmed',
+            data: order
+        })
     }
 
   } catch (error) {

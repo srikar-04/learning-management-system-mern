@@ -11,6 +11,9 @@ import NotFoundPage from './pages/not-found/NotFoundPage'
 import AddNewCoursePage from './pages/instructor/AddNewCoursePage'
 import StudentCoursesPage from './pages/student/StudentCoursesPage'
 import StudentCourseDetailsPage from './pages/student/StudentCourseDetailsPage'
+import PaymentCancelPage from './pages/payments/PaymentCancelPage'
+import PaymentReturnPage from './pages/payments/PaymentReturnPage'
+import MyCourses from './pages/student/MyCourses'
 
 function App() {
 
@@ -66,6 +69,10 @@ function App() {
             />
           }
         />
+
+        <Route path="/payment-return" element={<PaymentReturnPage />} />
+        <Route path="/payment-cancel" element={<PaymentCancelPage />} />
+        <Route path="/my-courses" element={<MyCourses />} />
 
        <Route path='/'
         element={
