@@ -85,7 +85,7 @@ function StudentCourseDetailsPage() {
           setCurrentCourseDetails(response.data)
         } else {
           // setIsCoursePurchased(true)
-          navigate(`/course-progress`, {replace: true}) 
+          navigate(`/course-progress/${currentCourseId}`, {replace: true}) 
           // navigate(`/course-progress/${currentCourseId}`, {replace: true}) 
         }
         // setCurrentCourseDetails(response.data);
