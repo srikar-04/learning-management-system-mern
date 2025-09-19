@@ -33,6 +33,7 @@ function StudentCourseDetailsPage() {
   const [freePreviewVideoUrl, setFreePreviewVideoUrl] = useState([])
   // const [isCoursePurchased, setIsCoursePurchased] = useState(false)
   const navigate = useNavigate();
+  const {auth} = useContext(AuthContext)
 
   const { id } = useParams();
   const location = useLocation();
@@ -50,45 +51,38 @@ function StudentCourseDetailsPage() {
   // }, []);
 
   useEffect(() => {
-  if (id && isValidMongoId(id)) {
-    setCurrentCourseId(id);
-  } else {
-    console.warn("id is not valid ObjectId");
-    setCurrentCourseId(null); // or skip fetching
-  }
-}, [id]);
 
+  if(!id || !isValidMongoId(id)) {
+    console.warn("id is not valid ObjectId")
+    setCurrentCourseId(null)
+    setLoading(false)
+    setCurrentCourseDetails(null)
+    return
+  }
+
+    setCurrentCourseDetails(null)
 
   const fetchCurrentCourseDetails = async () => {
     // console.log('fetching data using id');
     try {
 
-      
-      if (!currentCourseId ) {
-        console.error('cannot find course id, cannot fetch course details');
-        setLoading(false);
-        return;
-      }
+      setLoading(true)
 
-      if(!isValidMongoId(currentCourseId)) {
-        console.error('invalid course id, cannot fetch course details');
-        setLoading(false);
-        return;
-      }
-
-      const response = await fetchStudentCourseDetailsService(currentCourseId, auth?.user?._id);
+      const response = await fetchStudentCourseDetailsService(id, auth?.user?._id);
 
       // console.log(response, 'reponse in useEffect');
 
       if (response?.success) {
-        if(response?.isCoursePurchased === false) {
-          setCurrentCourseDetails(response.data)
+        
+        setCurrentCourseId(id);
+
+        if(response?.purchasedCourseId === id) {
+          setCurrentCourseDetails(null)
+          setCurrentCourseId(null)
+          navigate(`/course-progress/${id}`, {replace: true})
         } else {
-          // setIsCoursePurchased(true)
-          navigate(`/course-progress/${currentCourseId}`, {replace: true}) 
-          // navigate(`/course-progress/${currentCourseId}`, {replace: true}) 
+          setCurrentCourseDetails(response.data)
         }
-        // setCurrentCourseDetails(response.data);
       } else {
         console.error("data not found for specific course");
       }
@@ -102,9 +96,13 @@ function StudentCourseDetailsPage() {
     }
   };
 
-  useEffect(() => {
-    fetchCurrentCourseDetails();
-  }, [currentCourseId]);
+  fetchCurrentCourseDetails()
+
+}, [id, auth?.user?._id, navigate]);
+
+  // useEffect(() => {
+  //   fetchCurrentCourseDetails();
+  // }, [setCurrentCourseId, currentCourseId]);
 
   const handleFreePreviewDialog = (index) => {
 
@@ -184,8 +182,6 @@ function StudentCourseDetailsPage() {
   courseTitle,
   courseId,
   coursePricing,} = useContext(studentContext)
-
-  const {auth} = useContext(AuthContext)
 
   async function handleCreatePayment() {
     console.log(currentCourseDetails?._id, 'current course id before creating payment');

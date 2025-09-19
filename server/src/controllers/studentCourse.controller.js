@@ -89,21 +89,26 @@ const getStudentCourseDetails = async(req, res) => {
         }
 
         // fetch purchased courses by the student
-        const purchasedCourses = await StudentCourses.findOne({
+        const studentCourses = await StudentCourses.findOne({
           userId: studentId
         })
 
         // console.log(purchasedCourses, 'purchasedCourses from studentCourses collection');
 
-        const isCoursePurchased = purchasedCourses?.courses.some( course => course.courseId?.toString() === id)
+        const purchasedCourse = studentCourses?.courses.find( course => course.courseId?.toString() === id)
 
-        // console.log(isCoursePurchased, 'isCoursePurchased');
-        
+        console.log(purchasedCourse, 'purchasedCourse');
+
+        let purchasedCourseId = ""
+        if(purchasedCourse) {
+          purchasedCourseId = purchasedCourse.courseId
+        }
+        console.log(purchasedCourseId, 'purchasedCourseId');     
 
         res.status(200).json({
           success: true,
           data: courseDetails,
-          isCoursePurchased
+          purchasedCourseId
         })
         
     } catch (error) {
